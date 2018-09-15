@@ -1,0 +1,7 @@
+---
+
+- name: Set facts for ProxySQL service state
+  set_fact:
+    proxysql_service_enabled_state: no
+    proxysql_service_state: stopped
+  when: not proxysql_service_enabled

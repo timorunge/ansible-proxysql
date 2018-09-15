@@ -1,0 +1,11 @@
+---
+
+proxysql_distribution: "{{ ansible_distribution|lower }}"
+proxysql_distribution_version: "{{ ansible_distribution_major_version }}"
+proxysql_arch: x86_64
+proxysql_pkg: "proxysql-{{ proxysql_version }}-1-{{ proxysql_distribution }}{{ proxysql_distribution_version }}.{{ proxysql_arch }}.rpm"
+proxysql_pkg_url: "{{ proxysql_download_url }}/v{{ proxysql_version }}/{{ proxysql_pkg }}"
+
+proxysql_dependency_pkgs:
+  - MySQL-python
+  - mysql

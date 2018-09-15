@@ -1,0 +1,29 @@
+---
+
+- name: Add ProxySQL APT signing key
+  apt_key:
+    state: present
+    url: http://repo.proxysql.com/ProxySQL/repo_pub_key
+  when: >
+        (proxysql_use_official_repo) and
+        (ansible_os_family == "Debian")
+
+- name: Add ProxySQL APT repository
+  apt_repository:
+    repo: deb http://repo.proxysql.com/ProxySQL/proxysql-1.4.x/{{ ansible_distribution_release }}/ ./
+    state: present
+  when: >
+        (proxysql_use_official_repo) and
+        (ansible_os_family == "Debian")
+
+- name: Add ProxySQL YUM repository
+  yum_repository:
+    baseurl: http://repo.proxysql.com/ProxySQL/proxysql-1.4.x/centos/$releasever
+    description: ProxySQL YUM repository
+    gpgcheck: True
+    gpgkey: http://repo.proxysql.com/ProxySQL/repo_pub_key
+    name: proxysql-1.4.x
+    state: present
+  when: >
+        (proxysql_use_official_repo) and
+        (ansible_os_family == "RedHat")

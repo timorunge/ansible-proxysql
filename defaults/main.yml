@@ -1,0 +1,235 @@
+---
+
+# Enable / disable ProxySQL as a service.
+proxysql_service_enabled: True
+
+# Restart ProxySQL if static variables are changing. For a list of static
+# variables take a look at `proxysql_non_dynamic_variables` in `vars/main.yml`.
+proxysql_restart_on_static_variables_change: True
+
+# Repository
+
+# Use the official ProxySQL repository. If set to `False` the module will
+# automatically download the defined version as a package.
+proxysql_use_official_repo: True
+
+# The ProxySQL version which should be installed if not using the ProxySQL
+# repository.
+proxysql_version: 1.4.11
+
+# Configuration
+
+# The path where ProxySQL should save it's database and logs.
+proxysql_datadir: /var/lib/proxysql
+
+# The login variables for the configuration of ProxySQL itself. They are just
+# used inside the `main.yml` file and here to simplify the configuration.
+proxysql_login_host: 127.0.0.1
+proxysql_login_password: admin
+proxysql_login_user: admin
+
+# Global variables
+# `admin_variables` in `proxysql_global_variables_kv`: contains global
+# variables that control the functionality of the admin interface.
+# `admin_variables` are prefixed with `admin-`.
+# `mysql_variables`: in `proxysql_global_variables_kv` contains global
+# variables that control the functionality for handling the incoming
+# MySQL traffic.
+# `mysql_variables` are prefixed with `mysql-`.
+
+# The variables should be either a string or an integer. You should mark
+# a boolean value as a string, e.g. "True" or "False".
+
+# For a full reference take a look at:
+# https://github.com/sysown/proxysql/wiki/Global-variables
+
+# Format:
+# proxysql_global_variables:
+#   load_to_runtime: "True"
+#   save_to_disk: "True"
+#   login_host: "{{ proxysql_login_host }}"
+#   login_password: "{{ proxysql_login_password }}"
+#   login_user: "{{ proxysql_login_user }}"
+proxysql_global_variables:
+  login_host: "{{ proxysql_login_host }}"
+  login_password: "{{ proxysql_login_password }}"
+  login_user: "{{ proxysql_login_user }}"
+# Format:
+# proxysql_global_variables_kv:
+#   key: value
+# e.g.:
+# proxysql_global_variables_kv:
+#   admin-admin_credentials: "{{ proxysql_login_user }}:{{ proxysql_login_password }}"
+#   admin-mysql_ifaces: 0.0.0.0:6032
+#   mysql-interfaces: 0.0.0.0:6033
+#   mysql-commands_stats: "True"
+#   mysql-threads: 4
+proxysql_global_variables_kv: []
+
+# Backend servers
+# `proxysql_backend_servers`: contains rows for the mysql_servers table from
+# the admin interface. Basically, these define the backend servers towards
+# which the incoming MySQL traffic is routed.
+
+# For a full reference take a look at:
+# https://docs.ansible.com/ansible/latest/modules/proxysql_backend_servers_module.html
+# Important: This module uses `hostgroup` (which is the correct name in the
+# database) instead of `hostgroup_id` (which is the default in the Ansible
+# module)!
+
+# Format:
+# proxysql_backend_servers:
+#   mysql-srv1-hg1:
+#     comment: mysql-srv1-hg1
+#     hostgroup: 1
+#     hostname: 172.16.77.101
+#     login_host: "{{ proxysql_login_host }}"
+#     login_password: "{{ proxysql_login_password }}"
+#     login_user: "{{ proxysql_login_user }}"
+#     max_connections: 1000
+#     max_replication_lag: 0
+#     status: ONLINE
+#     weight: 1
+#   mysql-srv1-hg2:
+#     comment: mysql-srv1-hg2
+#     hostgroup: 2
+#     hostname: 172.16.77.101
+#     login_host: "{{ proxysql_login_host }}"
+#     login_password: "{{ proxysql_login_password }}"
+#     login_user: "{{ proxysql_login_user }}"
+#     max_connections: 1000
+#     max_replication_lag: 0
+#     status: ONLINE
+#     weight: 1
+proxysql_backend_servers: []
+
+# ProxySQL servers
+# `proxysql_proxysql_servers`: contains rows for the proxysql_servers table
+# from the admin interface. Basically, these define the ProxySQL servers
+# which are used for clustering.
+
+# For a full reference take a look at:
+# `library/proxysql_proxysql_servers.py` since this is not a part of the
+# official Ansible package.
+
+# Format:
+# proxysql_proxysql_servers:
+#   proxysql-srv-1:
+#     comment: proxysql-srv-1
+#     hostname: 172.16.77.201
+#     login_host: "{{ proxysql_login_host }}"
+#     login_password: "{{ proxysql_login_password }}"
+#     login_user: "{{ proxysql_login_user }}"
+#     weight: 0
+#   proxysql-srv-2:
+#     comment: proxysql-srv-2
+#     hostname: 172.16.77.202
+#     login_host: "{{ proxysql_login_host }}"
+#     login_password: "{{ proxysql_login_password }}"
+#     login_user: "{{ proxysql_login_user }}"
+#     weight: 0
+proxysql_proxysql_servers: []
+
+# Replication hostgroups
+# `proxysql_replication_hostgroups`: represent a pair of writer_hostgroup
+# and reader_hostgroup. ProxySQL will monitor the value of read_only for all
+# the servers in specified hostgroups, and based on the value of read_only
+# will assign the server to the writer or reader hostgroups.
+
+# For a full reference take a look at:
+# https://docs.ansible.com/ansible/latest/modules/proxysql_replication_hostgroups_module.html
+
+# Format:
+# proxysql_replication_hostgroups:
+#   Cluster:
+#     comment: Cluster
+#     login_host: "{{ proxysql_login_host }}"
+#     login_password: "{{ proxysql_login_password }}"
+#     login_user: "{{ proxysql_login_user }}"
+#     reader_hostgroup: 2
+#     writer_hostgroup: 1
+proxysql_replication_hostgroups: []
+
+# Users
+# `proxysql_mysql_users`: contains rows for the mysql_users table from the
+# admin interface. Basically, these define the users which can connect to the
+# proxy, and the users with which the proxy can connect to the backend servers.
+
+# For a full reference take a look at:
+# http://docs.ansible.com/ansible/latest/proxysql_mysql_users_module.html
+
+# Format:
+# proxysql_mysql_users:
+#   user1:
+#     active: 1
+#     backend: 1
+#     default_hostgroup: 1
+#     fast_forward: 0
+#     frontend: 1
+#     login_host: "{{ proxysql_login_host }}"
+#     login_password: "{{ proxysql_login_password }}"
+#     login_user: "{{ proxysql_login_user }}"
+#     max_connections: 10000
+#     password: Passw0rd
+#     transaction_persistent: 1
+#     username: user1
+#   user2:
+#     active: 1
+#     backend: 1
+#     default_hostgroup: 2
+#     fast_forward: 0
+#     frontend: 1
+#     login_host: "{{ proxysql_login_host }}"
+#     login_password: "{{ proxysql_login_password }}"
+#     login_user: "{{ proxysql_login_user }}"
+#     max_connections: 1000
+#     password: dr0wssaP
+#     transaction_persistent: 1
+#     username: user2
+proxysql_mysql_users: []
+
+# Query rules
+# `proxysql_query_rules` contains rows for the mysql_query_rules table from
+# the admin interface. Basically, these define the rules used to classify and
+# route the incoming MySQL traffic, according to various criteria (patterns
+# matched, user used to run the query, etc.).
+
+# For a full reference take a look at:
+# http://docs.ansible.com/ansible/latest/proxysql_query_rules_module.html
+
+# Format:
+# proxysql_query_rules:
+#   catchall:
+#     active: 1
+#     apply: 1
+#     destination_hostgroup: 1
+#     flagIN: 0
+#     login_host: "{{ proxysql_login_host }}"
+#     login_password: "{{ proxysql_login_password }}"
+#     login_user: "{{ proxysql_login_user }}"
+#     match_pattern: .*@.*
+#     negate_match_pattern: 0
+#     rule_id: 1
+#   selectforupdate:
+#     active: 1
+#     apply: 1
+#     destination_hostgroup: 1
+#     flagIN: 0
+#     login_host: "{{ proxysql_login_host }}"
+#     login_password: "{{ proxysql_login_password }}"
+#     login_user: "{{ proxysql_login_user }}"
+#     match_pattern: ^SELECT.*FOR UPDATE
+#     negate_match_pattern: 0
+#     rule_id: 2
+#   select:
+#     active: 1
+#     apply: 0
+#     destination_hostgroup: 2
+#     flagIN: 0
+#     login_host: "{{ proxysql_login_host }}"
+#     login_password: "{{ proxysql_login_password }}"
+#     login_user: "{{ proxysql_login_user }}"
+#     match_pattern: ^SELECT.*
+#     negate_match_pattern: 0
+#     rule_id: 3
+proxysql_query_rules: []

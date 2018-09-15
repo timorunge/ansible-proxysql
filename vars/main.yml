@@ -1,0 +1,22 @@
+---
+
+# Primary download URL for the ProxySQL packages
+proxysql_download_url: https://github.com/sysown/proxysql/releases/download
+
+# Name of the ProxySQL package
+proxysql_pkgs:
+  - proxysql
+
+# The following keys should be ignored in `proxysql.cnf`
+proxysql_ignore_template_keys:
+  - login_host
+  - login_password
+  - login_user
+
+# For those variables ProxySQL needs a restart to take effect
+proxysql_non_dynamic_variables:
+  - admin-mysql_ifaces
+  - admin-version
+  - mysql-interfaces
+  - mysql-threads
+  - mysql-stacksize

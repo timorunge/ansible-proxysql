@@ -1,0 +1,22 @@
+---
+
+# http://docs.ansible.com/ansible/latest/proxysql_replication_hostgroups_module.html
+
+- name: Manage ProxySQL replication hostgroups
+  proxysql_replication_hostgroups:
+    comment: "{{ item.value.comment | default(omit) }}"
+    config_file: "{{ item.value.config_file | default(omit) }}"
+    load_to_runtime: "{{ item.value.load_to_runtime | default('True') }}"
+    login_host: "{{ item.value.login_host | default('127.0.0.1') }}"
+    login_password: "{{ item.value.login_password | default(omit) }}"
+    login_port: "{{ item.value.login_port | default('6032') }}"
+    login_user: "{{ item.value.login_user | default(omit) }}"
+    reader_hostgroup: "{{ item.value.reader_hostgroup }}"
+    save_to_disk: "{{ item.value.save_to_disk | default('True') }}"
+    state: "{{ item.value.state | default('present') }}"
+    writer_hostgroup: "{{ item.value.writer_hostgroup }}"
+  with_dict: "{{ proxysql_replication_hostgroups }}"
+  when: >
+        proxysql_service_enabled and
+        (proxysql_replication_hostgroups is defined) and
+        proxysql_replication_hostgroups

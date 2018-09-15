@@ -1,0 +1,6 @@
+.idea
+docker_test_runner.py
+tests/.my.cnf
+tests/ansible.cfg
+tests/results.log
+tests/test.retry

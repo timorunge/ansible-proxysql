@@ -1,0 +1,60 @@
+---
+
+project_name: ProxySQL
+
+threads: 4
+
+log_level: INFO
+
+disable_logging: False
+
+docker_image_build_args:
+  ansible_role: timorunge.proxysql
+  ansible_version: "2.6.4"
+
+docker_image_path: "__PATH__/tests/docker"
+
+docker_images:
+  - CentOS_7
+  - Debian_8_10
+  - Debian_9_4
+  - Ubuntu_14_04
+  - Ubuntu_16_04
+  - Ubuntu_17_10
+  - Ubuntu_18_04
+  - Ubuntu_18_10
+
+docker_container_environments:
+  pkg:
+    proxysql_use_official_repo: True
+    skip_images:
+      - Ubuntu_16_04
+      - Ubuntu_17_10
+      - Ubuntu_18_04
+      - Ubuntu_18_10
+  "1_4_7":
+    proxysql_use_official_repo: False
+    proxysql_version: 1.4.7
+    skip_images:
+      - CentOS_7
+      - Debian_8_10
+      - Debian_9_4
+      - Ubuntu_17_10
+      - Ubuntu_18_04
+      - Ubuntu_18_10
+  "1_4_11":
+    proxysql_use_official_repo: False
+    proxysql_version: 1.4.11
+    skip_images:
+      - Ubuntu_16_04
+
+docker_container_volumes:
+  "__PATH__":
+    bind: /etc/ansible/roles/timorunge.proxysql
+    mode: ro
+  "__PATH__/tests":
+    bind: /ansible
+    mode: rw
+  "__PATH__/tests/docker":
+    bind: /docker
+    mode: ro

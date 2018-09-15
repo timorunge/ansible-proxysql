@@ -1,0 +1,34 @@
+---
+
+# http://docs.ansible.com/ansible/latest/proxysql_global_variables_module.html
+
+- name: Manage ProxySQL global variables
+  proxysql_global_variables:
+    config_file: "{{ proxysql_global_variables.config_file | default(omit) }}"
+    load_to_runtime: "{{ proxysql_global_variables.load_to_runtime | default('True') }}"
+    login_host: "{{ proxysql_global_variables.login_host | default('127.0.0.1') }}"
+    login_password: "{{ proxysql_global_variables.login_password | default(omit) }}"
+    login_port: "{{ proxysql_global_variables.login_port | default('6032') }}"
+    login_user: "{{ proxysql_global_variables.login_user | default(omit) }}"
+    save_to_disk: "{{ proxysql_global_variables.save_to_disk | default('True') }}"
+    variable: "{{ item.key }}"
+    value: "{{ item.value }}"
+  with_dict: "{{ proxysql_global_variables_kv }}"
+  register: global_variable
+  when: >
+        proxysql_service_enabled and
+        (proxysql_global_variables_kv is defined) and
+        proxysql_global_variables_kv
+
+- name: Check for global variable change
+  command: echo "Global variable \"{{ item.item.key }}\" changed. Restart ProxySQL."
+  notify:
+    - restart proxysql service
+  loop: "{{ global_variable.results }}"
+  no_log: True
+  when: >
+        proxysql_service_enabled and
+        global_variable.changed and
+        proxysql_restart_on_static_variables_change and
+        item.changed and
+        (item.item.key in proxysql_non_dynamic_variables)

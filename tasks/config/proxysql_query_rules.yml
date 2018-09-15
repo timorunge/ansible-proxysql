@@ -1,0 +1,45 @@
+---
+
+# http://docs.ansible.com/ansible/latest/proxysql_query_rules_module.html
+
+- name: Manage ProxySQL query rules
+  proxysql_query_rules:
+    active: "{{ item.value.active | default('0') }}"
+    apply: "{{ item.value.apply | default('0') }}"
+    cache_ttl: "{{ item.value.cache_ttl | default(omit) }}"
+    client_addr: "{{ item.value.client_addr | default(omit) }}"
+    comment: "{{ item.value.comment | default(omit) }}"
+    config_file: "{{ item.value.config_file | default(omit) }}"
+    delay: "{{ item.value.delay | default(omit) }}"
+    destination_hostgroup: "{{ item.value.destination_hostgroup | default(omit) }}"
+    digest: "{{ item.value.digest | default(omit) }}"
+    error_msg: "{{ item.value.error_msg | default(omit) }}"
+    flagIN: "{{ item.value.flagIN | default('0') }}"
+    flagOUT: "{{ item.value.flagOUT | default(omit) }}"
+    force_delete: "{{ item.value.force_delete | default(omit) }}"
+    load_to_runtime: "{{ item.value.load_to_runtime | default('True') }}"
+    log: "{{ item.value.log | default(omit) }}"
+    login_host: "{{ item.value.login_host | default('127.0.0.1') }}"
+    login_password: "{{ item.value.login_password | default(omit) }}"
+    login_port: "{{ item.value.login_port | default('6032') }}"
+    login_user: "{{ item.value.login_user | default(omit) }}"
+    match_digest: "{{ item.value.match_digest | default(omit) }}"
+    match_pattern: "{{ item.value.match_pattern | default(omit) }}"
+    mirror_flagOUT: "{{ item.value.mirror_flagOUT | default(omit) }}"
+    mirror_hostgroup: "{{ item.value.mirror_hostgroup | default(omit) }}"
+    negate_match_pattern: "{{ item.value.negate_match_pattern | default('0') }}"
+    proxy_addr: "{{ item.value.proxy_addr | default(omit) }}"
+    proxy_port: "{{ item.value.proxy_port | default(omit) }}"
+    replace_pattern: "{{ item.value.replace_pattern | default(omit) }}"
+    retries: "{{ item.value.retries | default(omit) }}"
+    rule_id: "{{ item.value.rule_id | default(omit) }}"
+    save_to_disk: "{{ item.value.save_to_disk | default('True') }}"
+    schemaname: "{{ item.value.schemaname | default(omit) }}"
+    state: "{{ item.value.state | default('present') }}"
+    timeout: "{{ item.value.timeout | default(omit) }}"
+    username: "{{ item.value.username | default(omit) }}"
+  with_dict: "{{ proxysql_query_rules }}"
+  when: >
+        proxysql_service_enabled and
+        (proxysql_query_rules is defined) and
+        proxysql_query_rules

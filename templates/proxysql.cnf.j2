@@ -1,0 +1,216 @@
+# {{ ansible_managed }}
+# file proxysql.cfg
+# proxysql.cfg in GitHub: https://github.com/sysown/proxysql/blob/master/etc/proxysql.cnf
+
+########################################################################################
+# This config file is parsed using libconfig , and its grammar is described in:
+# http://www.hyperrealm.com/libconfig/libconfig_manual.html#Configuration-File-Grammar
+# Grammar is also copied at the end of this file
+########################################################################################
+
+########################################################################################
+# IMPORTANT INFORMATION REGARDING THIS CONFIGURATION FILE:
+########################################################################################
+# On startup, ProxySQL reads its config file (if present) to determine its datadir.
+# What happens next depends on if the database file (disk) is present in the defined
+# datadir (i.e. "/var/lib/proxysql/proxysql.db").
+#
+# If the database file is found, ProxySQL initializes its in-memory configuration from
+# the persisted on-disk database. So, disk configuration gets loaded into memory and
+# then propagated towards the runtime configuration.
+#
+# If the database file is not found and a config file exists, the config file is parsed
+# and its content is loaded into the in-memory database, to then be both saved on-disk
+# database and loaded at runtime.
+#
+# IMPORTANT: If a database file is found, the config file is NOT parsed. In this case
+#            ProxySQL initializes its in-memory configuration from the persisted on-disk
+#            database ONLY. In other words, the configuration found in the proxysql.cnf
+#            file is only used to initial the on-disk database read on the first startup.
+#
+# In order to FORCE a re-initialise of the on-disk database from the configuration file
+# the ProxySQL service should be started with "service proxysql initial".
+#
+########################################################################################
+
+datadir = "{{ proxysql_datadir | default('/var/lib/proxysql') }}"
+
+# defines all admin variables
+admin_variables =
+{
+{% if proxysql_global_variables_kv is defined %}
+  {% for key, value in proxysql_global_variables_kv.items() %}
+    {% if key.startswith("admin-") %}
+      {% if value is number %}
+        {{ key|replace("admin-", "") }} = {{ value }}
+      {% else %}
+        {{ key|replace("admin-", "") }} = "{{ value }}"
+      {% endif %}
+    {% endif %}
+  {% endfor %}
+{% endif %}
+}
+
+# defines all MySQL variables
+mysql_variables =
+{
+{% if proxysql_global_variables_kv is defined %}
+  {% for key, value in proxysql_global_variables_kv.items() %}
+    {% if key.startswith("mysql-") %}
+      {% if value is number %}
+        {{ key|replace("mysql-", "") }} = {{ value }}
+      {% else %}
+        {{ key|replace("mysql-", "") }} = "{{ value }}"
+      {% endif %}
+    {% endif %}
+  {% endfor %}
+{% endif %}
+}
+
+# defines all MySQL servers
+mysql_servers =
+(
+{% if proxysql_backend_servers is defined %}
+  {% for server in proxysql_backend_servers %}
+    {
+      {% for key, value in proxysql_backend_servers[server].items() %}
+        {% if key not in proxysql_ignore_template_keys %}
+          {% if value is number %}
+            {{ key }} = {{ value }}
+          {% else %}
+            {{ key }} = "{{ value }}"
+          {% endif %}
+        {% endif %}
+      {% endfor %}
+    }
+    {% if not loop.last %},{% endif %}
+  {% endfor %}
+{% endif %}
+)
+
+# defines all MySQL users
+mysql_users:
+(
+{% if proxysql_mysql_users is defined %}
+  {% for user in proxysql_mysql_users %}
+    {
+      {% for key, value in proxysql_mysql_users[user].items() %}
+        {% if key not in proxysql_ignore_template_keys %}
+          {% if value is number %}
+            {{ key }} = {{ value }}
+          {% else %}
+            {{ key }} = "{{ value }}"
+          {% endif %}
+        {% endif %}
+      {% endfor %}
+    }
+    {% if not loop.last %},{% endif %}
+  {% endfor %}
+{% endif %}
+)
+
+# defines MySQL query rules
+mysql_query_rules:
+(
+{% if proxysql_query_rules is defined %}
+  {% for query_rule in proxysql_query_rules %}
+    {
+      {% for key, value in proxysql_query_rules[query_rule].items() %}
+        {% if key not in proxysql_ignore_template_keys %}
+          {% if value is number %}
+            {{ key }} = {{ value }}
+          {% else %}
+            {{ key }} = "{{ value }}"
+          {% endif %}
+        {% endif %}
+      {% endfor %}
+    }
+    {% if not loop.last %},{% endif %}
+  {% endfor %}
+{% endif %}
+)
+
+# defines all replication hostgroups
+mysql_replication_hostgroups =
+(
+{% if proxysql_replication_hostgroups is defined %}
+  {% for replication_hostgroup in proxysql_replication_hostgroups %}
+    {
+      {% for key, value in proxysql_replication_hostgroups[replication_hostgroup].items() %}
+        {% if key not in proxysql_ignore_template_keys %}
+          {% if value is number %}
+            {{ key }} = {{ value }}
+          {% else %}
+            {{ key }} = "{{ value }}"
+          {% endif %}
+        {% endif %}
+      {% endfor %}
+    }
+    {% if not loop.last %},{% endif %}
+  {% endfor %}
+{% endif %}
+)
+
+# defines all proxysql servers
+proxysql_servers =
+(
+{% if proxysql_proxysql_servers is defined %}
+  {% for proxysql_server in proxysql_proxysql_servers %}
+    {
+      {% for key, value in proxysql_proxysql_servers[proxysql_server].items() %}
+        {% if key not in proxysql_ignore_template_keys %}
+          {% if value is number %}
+            {{ key }} = {{ value }}
+          {% else %}
+            {{ key }} = "{{ value }}"
+          {% endif %}
+        {% endif %}
+      {% endfor %}
+    }
+    {% if not loop.last %},{% endif %}
+  {% endfor %}
+{% endif %}
+)
+
+# defines schedulers
+scheduler =
+(
+#  {
+#    id = 1
+#    active = 0
+#    interval_ms = 10000
+#    filename = "/var/lib/proxysql/proxysql_galera_checker.sh"
+#    arg1 = "0"
+#    arg2 = "0"
+#    arg3 = "0"
+#    arg4 = "1"
+#    arg5 = "/var/lib/proxysql/proxysql_galera_checker.log"
+#  }
+)
+
+# http://www.hyperrealm.com/libconfig/libconfig_manual.html#Configuration-File-Grammar
+#
+# Below is the BNF grammar for configuration files. Comments and include directives are not part of the grammar, so they are not included here.
+#
+# configuration = setting-list | empty
+#
+# setting-list = setting | setting-list setting
+#
+# setting = name (":" | "=") value (";" | "," | empty)
+#
+# value = scalar-value | array | list | group
+#
+# value-list = value | value-list "," value
+#
+# scalar-value = boolean | integer | integer64 | hex | hex64 | float
+#                | string
+#
+# scalar-value-list = scalar-value | scalar-value-list "," scalar-value
+#
+# array = "[" (scalar-value-list | empty) "]"
+#
+# list = "(" (value-list | empty) ")"
+#
+# group = "{" (setting-list | empty) "}"
+#
+# empty =

@@ -506,7 +506,7 @@ You don't have to apply Ansible again after a manual restart.
 Known issues or: Good to know
 -----------------------------
 
-### 1) ProxySQL > 1.4.7 on Ubuntu 16.04
+### 1) ProxySQL > 1.4.7 on Ubuntu 16.04 (fixed)
 
 On Ubuntu 16.04 Ansible (version does not matter) / ProxySQL > 1.4.7 seems
 to have problems to communicate correctly via `mysql-python` /
@@ -578,10 +578,11 @@ Ansible - is working perfectly fine.
 
 **Last but not least...**
 
-If I've some time I'll try to debug a little bit more. It's just affecting
-Ubuntu 16.04 which is - for now - not top priority.
+This issue is sorted by installing
+[mysqlclient](https://github.com/PyMySQL/mysqlclient-python/) - which is a
+fork of MySQLdb - via pip.
 
-### 2) Packages for Ubuntu > 16.04
+### 2) Packages for Ubuntu > 16.04 (fixed)
 
 ProxySQL itself is not providing "up to date" packages for Ubuntu > 16.04.
 This Ansible role is working around this by downloading the 16.04 release
@@ -659,13 +660,10 @@ can be found in the following table:
 | Debian       | 8.10    | yes        | 1.4.11  |
 | Debian       | 9.4     | yes        | 1.4.11  |
 | Ubuntu       | 14.04   | yes        | 1.4.11  |
-| Ubuntu       | 16.04   | no         | 1.4.7   |
+| Ubuntu       | 16.04   | yes        | 1.4.11  |
 | Ubuntu       | 17.10   | no         | 1.4.11  |
 | Ubuntu       | 18.04   | no         | 1.4.11  |
 | Ubuntu       | 18.10   | no         | 1.4.11  |
-
-(For more details about Ubuntu 16.04 take a look at the
-[Known issues or: Good to know](#known-issues-or-good-to-know) section)
 
 ```sh
 # Testing locally:

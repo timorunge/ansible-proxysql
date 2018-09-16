@@ -28,25 +28,12 @@ docker_container_environments:
   pkg:
     proxysql_use_official_repo: True
     skip_images:
-      - Ubuntu_16_04
-      - Ubuntu_17_10
-      - Ubuntu_18_04
-      - Ubuntu_18_10
-  "1_4_7":
-    proxysql_use_official_repo: False
-    proxysql_version: 1.4.7
-    skip_images:
-      - CentOS_7
-      - Debian_8_10
-      - Debian_9_4
       - Ubuntu_17_10
       - Ubuntu_18_04
       - Ubuntu_18_10
   "1_4_11":
     proxysql_use_official_repo: False
     proxysql_version: 1.4.11
-    skip_images:
-      - Ubuntu_16_04
 
 docker_container_volumes:
   "__PATH__":

@@ -7,6 +7,12 @@
     update_cache: yes
   when: proxysql_dependency_pkgs
 
+- name: Install pip dependency packages
+  pip:
+    name: "{{ proxysql_pip_dependency_pkgs }}"
+    state: present
+  when: proxysql_pip_dependency_pkgs
+
 - name: Install ProxySQL from repository
   package:
     name: "{{ proxysql_pkgs }}"

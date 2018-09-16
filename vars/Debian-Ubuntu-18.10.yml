@@ -11,3 +11,5 @@ proxysql_dependency_pkgs:
   - libssl1.0.0
   - mysql-client
   - python-mysqldb
+
+proxysql_pip_dependency_pkgs: []

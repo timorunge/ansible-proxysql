@@ -27,7 +27,7 @@ Requirements
 ------------
 
 This role requires
-[Ansible 2.3.0](https://docs.ansible.com/ansible/devel/roadmap/ROADMAP_2_3.html)
+[Ansible 2.5.0](https://docs.ansible.com/ansible/devel/roadmap/ROADMAP_2_5.html)
 or higher.
 
 You can simply use pip to install (and define) a stable version:
@@ -74,11 +74,15 @@ proxysql_version: 1.4.11
 # The path where ProxySQL should save it's database and logs.
 proxysql_datadir: /var/lib/proxysql
 
+# Define the proxysql.cnf template
+proxysql_proxysql_cnf_template: proxysql.cnf.j2
+
 # The login variables for the configuration of ProxySQL itself. They are just
 # used inside the `main.yml` file and here to simplify the configuration.
-proxysql_login_host: 127.0.0.1
-proxysql_login_password: admin
-proxysql_login_user: admin
+proxysql_login_admin_host: 127.0.0.1
+proxysql_login_admin_password: admin
+proxysql_login_admin_port: 6032
+proxysql_login_admin_user: admin
 
 # Global variables
 # `admin_variables` in `proxysql_global_variables_kv`: contains global
@@ -89,28 +93,34 @@ proxysql_login_user: admin
 # MySQL traffic.
 # `mysql_variables` are prefixed with `mysql-`.
 
+# The variables should be either a string or an integer. You should mark
+# a boolean value as a string, e.g. "True" or "False".
+
 # For a full reference take a look at:
 # https://github.com/sysown/proxysql/wiki/Global-variables
 
 # Format:
 # proxysql_global_variables:
-#   load_to_runtime: True
-#   save_to_disk: True
-#   login_host: "{{ proxysql_login_host }}"
-#   login_password: "{{ proxysql_login_password }}"
-#   login_user: "{{ proxysql_login_user }}"
+#   load_to_runtime: "True"
+#   save_to_disk: "True"
+#   login_host: "{{ proxysql_login_admin_host }}"
+#   login_password: "{{ proxysql_login_admin_password }}"
+#   login_port: "{{ proxysql_login_admin_port }}"
+#   login_user: "{{ proxysql_login_admin_user }}"
 proxysql_global_variables:
-  login_host: "{{ proxysql_login_host }}"
-  login_password: "{{ proxysql_login_password }}"
-  login_user: "{{ proxysql_login_user }}"
+  login_host: "{{ proxysql_login_admin_host }}"
+  login_password: "{{ proxysql_login_admin_password }}"
+  login_port: "{{ proxysql_login_admin_port }}"
+  login_user: "{{ proxysql_login_admin_user }}"
 # Format:
 # proxysql_global_variables_kv:
 #   key: value
 # e.g.:
 # proxysql_global_variables_kv:
-#   admin-admin_credentials: "{{ proxysql_login_user }}:{{ proxysql_login_password }}"
-#   admin-mysql_ifaces: 0.0.0.0:6032
+#   admin-admin_credentials: "{{ proxysql_login_admin_user }}:{{ proxysql_login_admin_password }}"
+#   admin-mysql_ifaces: "{{ proxysql_login_admin_host }}:{{ proxysql_login_admin_port }}"
 #   mysql-interfaces: 0.0.0.0:6033
+#   mysql-commands_stats: "True"
 #   mysql-threads: 4
 proxysql_global_variables_kv: []
 
@@ -131,9 +141,10 @@ proxysql_global_variables_kv: []
 #     comment: mysql-srv1-hg1
 #     hostgroup: 1
 #     hostname: 172.16.77.101
-#     login_host: "{{ proxysql_login_host }}"
-#     login_password: "{{ proxysql_login_password }}"
-#     login_user: "{{ proxysql_login_user }}"
+#     login_host: "{{ proxysql_login_admin_host }}"
+#     login_password: "{{ proxysql_login_admin_password }}"
+#     login_port: "{{ proxysql_login_admin_port }}"
+#     login_user: "{{ proxysql_login_admin_user }}"
 #     max_connections: 1000
 #     max_replication_lag: 0
 #     status: ONLINE
@@ -142,9 +153,10 @@ proxysql_global_variables_kv: []
 #     comment: mysql-srv1-hg2
 #     hostgroup: 2
 #     hostname: 172.16.77.101
-#     login_host: "{{ proxysql_login_host }}"
-#     login_password: "{{ proxysql_login_password }}"
-#     login_user: "{{ proxysql_login_user }}"
+#     login_host: "{{ proxysql_login_admin_host }}"
+#     login_password: "{{ proxysql_login_admin_password }}"
+#     login_port: "{{ proxysql_login_admin_port }}"
+#     login_user: "{{ proxysql_login_admin_user }}"
 #     max_connections: 1000
 #     max_replication_lag: 0
 #     status: ONLINE
@@ -165,16 +177,18 @@ proxysql_backend_servers: []
 #   proxysql-srv-1:
 #     comment: proxysql-srv-1
 #     hostname: 172.16.77.201
-#     login_host: "{{ proxysql_login_host }}"
-#     login_password: "{{ proxysql_login_password }}"
-#     login_user: "{{ proxysql_login_user }}"
+#     login_host: "{{ proxysql_login_admin_host }}"
+#     login_password: "{{ proxysql_login_admin_password }}"
+#     login_port: "{{ proxysql_login_admin_port }}"
+#     login_user: "{{ proxysql_login_admin_user }}"
 #     weight: 0
 #   proxysql-srv-2:
 #     comment: proxysql-srv-2
 #     hostname: 172.16.77.202
-#     login_host: "{{ proxysql_login_host }}"
-#     login_password: "{{ proxysql_login_password }}"
-#     login_user: "{{ proxysql_login_user }}"
+#     login_host: "{{ proxysql_login_admin_host }}"
+#     login_password: "{{ proxysql_login_admin_password }}"
+#     login_port: "{{ proxysql_login_admin_port }}"
+#     login_user: "{{ proxysql_login_admin_user }}"
 #     weight: 0
 proxysql_proxysql_servers: []
 
@@ -191,9 +205,10 @@ proxysql_proxysql_servers: []
 # proxysql_replication_hostgroups:
 #   Cluster:
 #     comment: Cluster
-#     login_host: "{{ proxysql_login_host }}"
-#     login_password: "{{ proxysql_login_password }}"
-#     login_user: "{{ proxysql_login_user }}"
+#     login_host: "{{ proxysql_login_admin_host }}"
+#     login_password: "{{ proxysql_login_admin_password }}"
+#     login_port: "{{ proxysql_login_admin_port }}"
+#     login_user: "{{ proxysql_login_admin_user }}"
 #     reader_hostgroup: 2
 #     writer_hostgroup: 1
 proxysql_replication_hostgroups: []
@@ -214,9 +229,10 @@ proxysql_replication_hostgroups: []
 #     default_hostgroup: 1
 #     fast_forward: 0
 #     frontend: 1
-#     login_host: "{{ proxysql_login_host }}"
-#     login_password: "{{ proxysql_login_password }}"
-#     login_user: "{{ proxysql_login_user }}"
+#     login_host: "{{ proxysql_login_admin_host }}"
+#     login_password: "{{ proxysql_login_admin_password }}"
+#     login_port: "{{ proxysql_login_admin_port }}"
+#     login_user: "{{ proxysql_login_admin_user }}"
 #     max_connections: 10000
 #     password: Passw0rd
 #     transaction_persistent: 1
@@ -227,9 +243,10 @@ proxysql_replication_hostgroups: []
 #     default_hostgroup: 2
 #     fast_forward: 0
 #     frontend: 1
-#     login_host: "{{ proxysql_login_host }}"
-#     login_password: "{{ proxysql_login_password }}"
-#     login_user: "{{ proxysql_login_user }}"
+#     login_host: "{{ proxysql_login_admin_host }}"
+#     login_password: "{{ proxysql_login_admin_password }}"
+#     login_port: "{{ proxysql_login_admin_port }}"
+#     login_user: "{{ proxysql_login_admin_user }}"
 #     max_connections: 1000
 #     password: dr0wssaP
 #     transaction_persistent: 1
@@ -252,9 +269,10 @@ proxysql_mysql_users: []
 #     apply: 1
 #     destination_hostgroup: 1
 #     flagIN: 0
-#     login_host: "{{ proxysql_login_host }}"
-#     login_password: "{{ proxysql_login_password }}"
-#     login_user: "{{ proxysql_login_user }}"
+#     login_host: "{{ proxysql_login_admin_host }}"
+#     login_password: "{{ proxysql_login_admin_password }}"
+#     login_port: "{{ proxysql_login_admin_port }}"
+#     login_user: "{{ proxysql_login_admin_user }}"
 #     match_pattern: .*@.*
 #     negate_match_pattern: 0
 #     rule_id: 1
@@ -263,9 +281,10 @@ proxysql_mysql_users: []
 #     apply: 1
 #     destination_hostgroup: 1
 #     flagIN: 0
-#     login_host: "{{ proxysql_login_host }}"
-#     login_password: "{{ proxysql_login_password }}"
-#     login_user: "{{ proxysql_login_user }}"
+#     login_host: "{{ proxysql_login_admin_host }}"
+#     login_password: "{{ proxysql_login_admin_password }}"
+#     login_port: "{{ proxysql_login_admin_port }}"
+#     login_user: "{{ proxysql_login_admin_user }}"
 #     match_pattern: ^SELECT.*FOR UPDATE
 #     negate_match_pattern: 0
 #     rule_id: 2
@@ -274,9 +293,10 @@ proxysql_mysql_users: []
 #     apply: 0
 #     destination_hostgroup: 2
 #     flagIN: 0
-#     login_host: "{{ proxysql_login_host }}"
-#     login_password: "{{ proxysql_login_password }}"
-#     login_user: "{{ proxysql_login_user }}"
+#     login_host: "{{ proxysql_login_admin_host }}"
+#     login_password: "{{ proxysql_login_admin_password }}"
+#     login_port: "{{ proxysql_login_admin_port }}"
+#     login_user: "{{ proxysql_login_admin_user }}"
 #     match_pattern: ^SELECT.*
 #     negate_match_pattern: 0
 #     rule_id: 3
@@ -301,17 +321,19 @@ file which is used for testing.
   vars:
     proxysql_version: 1.4.11
     proxysql_service_enabled: True
-    proxysql_use_official_repo: False
-    proxysql_login_host: 127.0.0.1
-    proxysql_login_password: admin
-    proxysql_login_user: admin
+    proxysql_use_official_repo: True
+    proxysql_login_admin_host: 127.0.0.1
+    proxysql_login_admin_password: admin
+    proxysql_login_admin_port: 6032
+    proxysql_login_admin_user: admin
     proxysql_global_variables:
-      login_host: "{{ proxysql_login_host }}"
-      login_password: "{{ proxysql_login_password }}"
-      login_user: "{{ proxysql_login_user }}"
+      login_host: "{{ proxysql_login_admin_host }}"
+      login_password: "{{ proxysql_login_admin_password }}"
+      login_port: "{{ proxysql_login_admin_port }}"
+      login_user: "{{ proxysql_login_admin_user }}"
     proxysql_global_variables_kv:
-      admin-admin_credentials: "{{ proxysql_login_user }}:{{ proxysql_login_password }}"
-      admin-mysql_ifaces: 127.0.0.1:6032
+      admin-admin_credentials: "{{ proxysql_login_admin_user }}:{{ proxysql_login_admin_password }}"
+      admin-mysql_ifaces: "{{ proxysql_login_admin_host }}:{{ proxysql_login_admin_port }}"
       mysql-commands_stats: "True"
       mysql-connect_retries_on_failure: 10
       mysql-connect_timeout_server: 3000
@@ -319,7 +341,11 @@ file which is used for testing.
       mysql-default_query_delay: 0
       mysql-default_query_timeout: 300000
       mysql-default_schema: information_schema
-      mysql-default_sql_mode: STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION
+      mysql-default_sql_mode: >
+                              STRICT_TRANS_TABLES,
+                              ERROR_FOR_DIVISION_BY_ZERO,
+                              NO_AUTO_CREATE_USER,
+                              NO_ENGINE_SUBSTITUTION
       mysql-interfaces: 127.0.0.1:6033
       mysql-max_connections: 8192
       mysql-monitor_read_only_interval: 1500
@@ -334,9 +360,10 @@ file which is used for testing.
         comment: mysql-srv1-hg1
         hostgroup: 1
         hostname: 172.16.77.101
-        login_host: "{{ proxysql_login_host }}"
-        login_password: "{{ proxysql_login_password }}"
-        login_user: "{{ proxysql_login_user }}"
+        login_host: "{{ proxysql_login_admin_host }}"
+        login_password: "{{ proxysql_login_admin_password }}"
+        login_port: "{{ proxysql_login_admin_port }}"
+        login_user: "{{ proxysql_login_admin_user }}"
         max_connections: 1000
         max_replication_lag: 0
         status: ONLINE
@@ -345,9 +372,10 @@ file which is used for testing.
         comment: mysql-srv1-hg2
         hostgroup: 2
         hostname: 172.16.77.101
-        login_host: "{{ proxysql_login_host }}"
-        login_password: "{{ proxysql_login_password }}"
-        login_user: "{{ proxysql_login_user }}"
+        login_host: "{{ proxysql_login_admin_host }}"
+        login_password: "{{ proxysql_login_admin_password }}"
+        login_port: "{{ proxysql_login_admin_port }}"
+        login_user: "{{ proxysql_login_admin_user }}"
         max_connections: 1000
         max_replication_lag: 0
         status: ONLINE
@@ -356,9 +384,10 @@ file which is used for testing.
         comment: mysql-srv2-hg2
         hostgroup: 2
         hostname: 172.16.77.102
-        login_host: "{{ proxysql_login_host }}"
-        login_password: "{{ proxysql_login_password }}"
-        login_user: "{{ proxysql_login_user }}"
+        login_host: "{{ proxysql_login_admin_host }}"
+        login_password: "{{ proxysql_login_admin_password }}"
+        login_port: "{{ proxysql_login_admin_port }}"
+        login_user: "{{ proxysql_login_admin_user }}"
         max_connections: 2000
         max_replication_lag: 5
         status: ONLINE
@@ -367,36 +396,40 @@ file which is used for testing.
         comment: mysql-srv3-hg2
         hostgroup: 2
         hostname: 172.16.77.103
-        login_host: "{{ proxysql_login_host }}"
-        login_password: "{{ proxysql_login_password }}"
-        login_user: "{{ proxysql_login_user }}"
+        login_host: "{{ proxysql_login_admin_host }}"
+        login_password: "{{ proxysql_login_admin_password }}"
+        login_port: "{{ proxysql_login_admin_port }}"
+        login_user: "{{ proxysql_login_admin_user }}"
         max_connections: 2000
         max_replication_lag: 5
-        status: ONLINE
+        status: OFFLINE_HARD
         weight: 1
     proxysql_proxysql_servers:
       proxysql-srv-1:
         comment: proxysql-srv-1
         hostname: 172.16.77.201
-        login_host: "{{ proxysql_login_host }}"
-        login_password: "{{ proxysql_login_password }}"
-        login_user: "{{ proxysql_login_user }}"
+        login_host: "{{ proxysql_login_admin_host }}"
+        login_password: "{{ proxysql_login_admin_password }}"
+        login_port: "{{ proxysql_login_admin_port }}"
+        login_user: "{{ proxysql_login_admin_user }}"
         port: 6032
         weight: 0
       proxysql-srv-2:
         comment: proxysql-srv-2
         hostname: 172.16.77.202
-        login_host: "{{ proxysql_login_host }}"
-        login_password: "{{ proxysql_login_password }}"
-        login_user: "{{ proxysql_login_user }}"
+        login_host: "{{ proxysql_login_admin_host }}"
+        login_password: "{{ proxysql_login_admin_password }}"
+        login_port: "{{ proxysql_login_admin_port }}"
+        login_user: "{{ proxysql_login_admin_user }}"
         port: 6032
         weight: 0
     proxysql_replication_hostgroups:
       Cluster:
         comment: Cluster
-        login_host: "{{ proxysql_login_host }}"
-        login_password: "{{ proxysql_login_password }}"
-        login_user: "{{ proxysql_login_user }}"
+        login_host: "{{ proxysql_login_admin_host }}"
+        login_password: "{{ proxysql_login_admin_password }}"
+        login_port: "{{ proxysql_login_admin_port }}"
+        login_user: "{{ proxysql_login_admin_user }}"
         reader_hostgroup: 2
         writer_hostgroup: 1
     proxysql_mysql_users:
@@ -406,9 +439,10 @@ file which is used for testing.
         default_hostgroup: 1
         fast_forward: 0
         frontend: 1
-        login_host: "{{ proxysql_login_host }}"
-        login_password: "{{ proxysql_login_password }}"
-        login_user: "{{ proxysql_login_user }}"
+        login_host: "{{ proxysql_login_admin_host }}"
+        login_password: "{{ proxysql_login_admin_password }}"
+        login_port: "{{ proxysql_login_admin_port }}"
+        login_user: "{{ proxysql_login_admin_user }}"
         max_connections: 10000
         password: Passw0rd
         transaction_persistent: 1
@@ -419,9 +453,10 @@ file which is used for testing.
         default_hostgroup: 1
         fast_forward: 0
         frontend: 1
-        login_host: "{{ proxysql_login_host }}"
-        login_password: "{{ proxysql_login_password }}"
-        login_user: "{{ proxysql_login_user }}"
+        login_host: "{{ proxysql_login_admin_host }}"
+        login_password: "{{ proxysql_login_admin_password }}"
+        login_port: "{{ proxysql_login_admin_port }}"
+        login_user: "{{ proxysql_login_admin_user }}"
         max_connections: 1000
         password: dr0wssaP
         transaction_persistent: 1
@@ -432,9 +467,10 @@ file which is used for testing.
         apply: 1
         destination_hostgroup: 1
         flagIN: 0
-        login_host: "{{ proxysql_login_host }}"
-        login_password: "{{ proxysql_login_password }}"
-        login_user: "{{ proxysql_login_user }}"
+        login_host: "{{ proxysql_login_admin_host }}"
+        login_password: "{{ proxysql_login_admin_password }}"
+        login_port: "{{ proxysql_login_admin_port }}"
+        login_user: "{{ proxysql_login_admin_user }}"
         match_pattern: .*@.*
         negate_match_pattern: 0
         rule_id: 1
@@ -443,9 +479,10 @@ file which is used for testing.
         apply: 1
         destination_hostgroup: 1
         flagIN: 0
-        login_host: "{{ proxysql_login_host }}"
-        login_password: "{{ proxysql_login_password }}"
-        login_user: "{{ proxysql_login_user }}"
+        login_host: "{{ proxysql_login_admin_host }}"
+        login_password: "{{ proxysql_login_admin_password }}"
+        login_port: "{{ proxysql_login_admin_port }}"
+        login_user: "{{ proxysql_login_admin_user }}"
         match_pattern: ^SELECT.*FOR UPDATE
         negate_match_pattern: 0
         rule_id: 2
@@ -454,9 +491,10 @@ file which is used for testing.
         apply: 0
         destination_hostgroup: 2
         flagIN: 0
-        login_host: "{{ proxysql_login_host }}"
-        login_password: "{{ proxysql_login_password }}"
-        login_user: "{{ proxysql_login_user }}"
+        login_host: "{{ proxysql_login_admin_host }}"
+        login_password: "{{ proxysql_login_admin_password }}"
+        login_port: "{{ proxysql_login_admin_port }}"
+        login_user: "{{ proxysql_login_admin_user }}"
         match_pattern: ^SELECT.*
         negate_match_pattern: 0
         rule_id: 3
@@ -475,9 +513,10 @@ Just set the `proxysql_use_official_repo` to `False` for newer Ubuntu releases.
 - hosts: proxysql
   vars:
     proxysql_use_official_repo: True
-    proxysql_login_host: 127.0.0.1
-    proxysql_login_password: admin
-    proxysql_login_user: admin
+    proxysql_login_admin_host: 127.0.0.1
+    proxysql_login_admin_password: admin
+    proxysql_login_admin_port: 6032
+    proxysql_login_admin_user: admin
     ...
 ```
 
@@ -497,9 +536,10 @@ You don't have to apply Ansible again after a manual restart.
   vars:
     proxysql_use_official_repo: False
     proxysql_restart_on_static_variables_change: False
-    proxysql_login_host: 127.0.0.1
-    proxysql_login_password: admin
-    proxysql_login_user: admin
+    proxysql_login_admin_host: 127.0.0.1
+    proxysql_login_admin_password: admin
+    proxysql_login_admin_port: 6032
+    proxysql_login_admin_user: admin
     ...
 ```
 

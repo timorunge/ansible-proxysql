@@ -2,10 +2,12 @@
 
 galaxy_info:
   author: Timo Runge
-  description: This role installs and configures ProxySQL - the high performance, high availability, protocol aware proxy for MySQL.
+  description: >
+               This role installs and configures ProxySQL -
+               the high performance, high availability, protocol aware proxy for MySQL.
   role_name: proxysql
   license: BSD
-  min_ansible_version: 2.3.0
+  min_ansible_version: 2.5.0
   platforms:
   - name: EL
     versions:

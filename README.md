@@ -53,32 +53,39 @@ a look at [defaults/main.yml](defaults/main.yml).
 
 ```yaml
 # Enable / disable ProxySQL as a service.
+# Type: Bool
 proxysql_service_enabled: True
 
 # Restart ProxySQL if static variables are changing. For a list of static
 # variables take a look at `proxysql_non_dynamic_variables` in `vars/main.yml`.
+# Type: Bool
 proxysql_restart_on_static_variables_change: True
 
 # Repository
 
 # Use the official ProxySQL repository. If set to `False` the module will
 # automatically download the defined version as a package.
+# Type: Bool
 proxysql_use_official_repo: True
 
 # The ProxySQL version which should be installed if not using the ProxySQL
 # repository.
+# Type: Int
 proxysql_version: 1.4.11
 
 # Configuration
 
 # The path where ProxySQL should save it's database and logs.
+# Type: Str
 proxysql_datadir: /var/lib/proxysql
 
 # Define the proxysql.cnf template
+# Type: Str
 proxysql_proxysql_cnf_template: proxysql.cnf.j2
 
 # The login variables for the configuration of ProxySQL itself. They are just
 # used inside the `main.yml` file and here to simplify the configuration.
+# Type: Str
 proxysql_login_admin_host: 127.0.0.1
 proxysql_login_admin_password: admin
 proxysql_login_admin_port: 6032
@@ -100,6 +107,7 @@ proxysql_login_admin_user: admin
 # https://github.com/sysown/proxysql/wiki/Global-variables
 
 # Format:
+# Type: Dict
 # proxysql_global_variables:
 #   load_to_runtime: "True"
 #   save_to_disk: "True"
@@ -113,6 +121,7 @@ proxysql_global_variables:
   login_port: "{{ proxysql_login_admin_port }}"
   login_user: "{{ proxysql_login_admin_user }}"
 # Format:
+# Type: Dict
 # proxysql_global_variables_kv:
 #   key: value
 # e.g.:
@@ -122,7 +131,7 @@ proxysql_global_variables:
 #   mysql-interfaces: 0.0.0.0:6033
 #   mysql-commands_stats: "True"
 #   mysql-threads: 4
-proxysql_global_variables_kv: []
+proxysql_global_variables_kv: {}
 
 # Backend servers
 # `proxysql_backend_servers`: contains rows for the mysql_servers table from
@@ -136,6 +145,7 @@ proxysql_global_variables_kv: []
 # module)!
 
 # Format:
+# Type: Dict
 # proxysql_backend_servers:
 #   mysql-srv1-hg1:
 #     comment: mysql-srv1-hg1
@@ -161,7 +171,7 @@ proxysql_global_variables_kv: []
 #     max_replication_lag: 0
 #     status: ONLINE
 #     weight: 1
-proxysql_backend_servers: []
+proxysql_backend_servers: {}
 
 # ProxySQL servers
 # `proxysql_proxysql_servers`: contains rows for the proxysql_servers table
@@ -173,6 +183,7 @@ proxysql_backend_servers: []
 # official Ansible package.
 
 # Format:
+# Type: Dict
 # proxysql_proxysql_servers:
 #   proxysql-srv-1:
 #     comment: proxysql-srv-1
@@ -190,7 +201,7 @@ proxysql_backend_servers: []
 #     login_port: "{{ proxysql_login_admin_port }}"
 #     login_user: "{{ proxysql_login_admin_user }}"
 #     weight: 0
-proxysql_proxysql_servers: []
+proxysql_proxysql_servers: {}
 
 # Replication hostgroups
 # `proxysql_replication_hostgroups`: represent a pair of writer_hostgroup
@@ -202,6 +213,7 @@ proxysql_proxysql_servers: []
 # https://docs.ansible.com/ansible/latest/modules/proxysql_replication_hostgroups_module.html
 
 # Format:
+# Type: Dict
 # proxysql_replication_hostgroups:
 #   Cluster:
 #     comment: Cluster
@@ -211,7 +223,7 @@ proxysql_proxysql_servers: []
 #     login_user: "{{ proxysql_login_admin_user }}"
 #     reader_hostgroup: 2
 #     writer_hostgroup: 1
-proxysql_replication_hostgroups: []
+proxysql_replication_hostgroups: {}
 
 # Users
 # `proxysql_mysql_users`: contains rows for the mysql_users table from the
@@ -222,6 +234,7 @@ proxysql_replication_hostgroups: []
 # http://docs.ansible.com/ansible/latest/proxysql_mysql_users_module.html
 
 # Format:
+# Type: Dict
 # proxysql_mysql_users:
 #   user1:
 #     active: 1
@@ -251,7 +264,7 @@ proxysql_replication_hostgroups: []
 #     password: dr0wssaP
 #     transaction_persistent: 1
 #     username: user2
-proxysql_mysql_users: []
+proxysql_mysql_users: {}
 
 # Query rules
 # `proxysql_query_rules` contains rows for the mysql_query_rules table from
@@ -263,6 +276,7 @@ proxysql_mysql_users: []
 # http://docs.ansible.com/ansible/latest/proxysql_query_rules_module.html
 
 # Format:
+# Type: Dict
 # proxysql_query_rules:
 #   catchall:
 #     active: 1
@@ -300,7 +314,7 @@ proxysql_mysql_users: []
 #     match_pattern: ^SELECT.*
 #     negate_match_pattern: 0
 #     rule_id: 3
-proxysql_query_rules: []
+proxysql_query_rules: {}
 ```
 
 Examples

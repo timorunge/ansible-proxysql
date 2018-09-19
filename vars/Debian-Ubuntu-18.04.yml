@@ -1,15 +1,18 @@
 ---
 
-proxysql_distribution: "{{ ansible_distribution|lower }}"
+# Type: Str
+proxysql_distribution: "{{ ansible_distribution | lower }}"
 proxysql_distribution_version: 16
 proxysql_arch: amd64
 proxysql_pkg: "proxysql_{{ proxysql_version }}-{{ proxysql_distribution }}{{ proxysql_distribution_version }}_{{ proxysql_arch }}.deb"
 proxysql_pkg_url: "{{ proxysql_download_url }}/v{{ proxysql_version }}/{{ proxysql_pkg }}"
 
+# Type: List
 proxysql_dependency_pkgs:
   - libcrypto++6
   - libssl1.0.0
   - mysql-client
   - python-mysqldb
 
+# Type: List
 proxysql_pip_dependency_pkgs: []

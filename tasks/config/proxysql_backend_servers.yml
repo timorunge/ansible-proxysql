@@ -9,7 +9,7 @@
     config_file: "{{ item.value.config_file | default(omit) }}"
     hostgroup_id: "{{ item.value.hostgroup | default('0') }}"
     hostname: "{{ item.value.hostname }}"
-    load_to_runtime: "{{ item.value.load_to_runtime | default('True') }}"
+    load_to_runtime: "{{ item.value.load_to_runtime | default(True) }}"
     login_host: "{{ item.value.login_host | default('127.0.0.1') }}"
     login_password: "{{ item.value.login_password | default(omit) }}"
     login_port: "{{ item.value.login_port | default('6032') }}"
@@ -18,12 +18,12 @@
     max_latency_ms: "{{ item.value.max_latency_ms | default('0') }}"
     max_replication_lag: "{{ item.value.max_replication_lag | default('0') }}"
     port: "{{ item.value.port | default('3306') }}"
-    save_to_disk: "{{ item.value.save_to_disk | default('True') }}"
+    save_to_disk: "{{ item.value.save_to_disk | default(True) }}"
     state: "{{ item.value.state | default('present') }}"
     status: "{{ item.value.status | default('ONLINE') }}"
     use_ssl: "{{ item.value.use_ssl | default('0') }}"
     weight: "{{ item.value.weight | default('1') }}"
-  with_dict: "{{ proxysql_backend_servers }}"
+  loop: "{{ proxysql_backend_servers | dict2items }}"
   when: >
         proxysql_service_enabled and
         (proxysql_backend_servers is defined) and

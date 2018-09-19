@@ -7,16 +7,16 @@
     comment: "{{ item.value.comment | default(omit) }}"
     config_file: "{{ item.value.config_file | default(omit) }}"
     hostname: "{{ item.value.hostname }}"
-    load_to_runtime: "{{ item.value.load_to_runtime | default('True') }}"
+    load_to_runtime: "{{ item.value.load_to_runtime | default(True) }}"
     login_host: "{{ item.value.login_host | default('127.0.0.1') }}"
     login_password: "{{ item.value.login_password | default(omit) }}"
     login_port: "{{ item.value.login_port | default('6032') }}"
     login_user: "{{ item.value.login_user | default(omit) }}"
     port: "{{ item.value.port | default('6032') }}"
-    save_to_disk: "{{ item.value.save_to_disk | default('True') }}"
+    save_to_disk: "{{ item.value.save_to_disk | default(True) }}"
     state: "{{ item.value.state | default('present') }}"
     weight: "{{ item.value.weight | default(omit) }}"
-  with_dict: "{{ proxysql_proxysql_servers }}"
+  loop: "{{ proxysql_proxysql_servers | dict2items }}"
   when: >
         proxysql_service_enabled and
         (proxysql_proxysql_servers is defined) and

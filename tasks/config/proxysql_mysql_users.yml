@@ -11,19 +11,19 @@
     default_schema: "{{ item.value.default_schema | default(omit) }}"
     fast_forward: "{{ item.value.fast_forward | default('0') }}"
     frontend: "{{ item.value.frontend | default('1') }}"
-    load_to_runtime: "{{ item.value.load_to_runtime | default('True') }}"
+    load_to_runtime: "{{ item.value.load_to_runtime | default(True) }}"
     login_host: "{{ item.value.login_host | default('127.0.0.1') }}"
     login_password: "{{ item.value.login_password | default(omit) }}"
     login_port: "{{ item.value.login_port | default('6032') }}"
     login_user: "{{ item.value.login_user | default(omit) }}"
     max_connections: "{{ item.value.max_connections | default('10000') }}"
     password: "{{ item.value.password | default(omit) }}"
-    save_to_disk: "{{ item.value.save_to_disk | default('True') }}"
+    save_to_disk: "{{ item.value.save_to_disk | default(True) }}"
     state: "{{ item.value.state | default('present') }}"
     transaction_persistent: "{{ item.value.transaction_persistent | default('1') }}"
     use_ssl: "{{ item.value.use_ssl | default('0') }}"
     username: "{{ item.value.username }}"
-  with_dict: "{{ proxysql_mysql_users }}"
+  loop: "{{ proxysql_mysql_users | dict2items }}"
   when: >
         proxysql_service_enabled and
         (proxysql_mysql_users is defined) and

@@ -17,7 +17,7 @@
     flagIN: "{{ item.value.flagIN | default('0') }}"
     flagOUT: "{{ item.value.flagOUT | default(omit) }}"
     force_delete: "{{ item.value.force_delete | default(omit) }}"
-    load_to_runtime: "{{ item.value.load_to_runtime | default('True') }}"
+    load_to_runtime: "{{ item.value.load_to_runtime | default(True) }}"
     log: "{{ item.value.log | default(omit) }}"
     login_host: "{{ item.value.login_host | default('127.0.0.1') }}"
     login_password: "{{ item.value.login_password | default(omit) }}"
@@ -33,12 +33,12 @@
     replace_pattern: "{{ item.value.replace_pattern | default(omit) }}"
     retries: "{{ item.value.retries | default(omit) }}"
     rule_id: "{{ item.value.rule_id | default(omit) }}"
-    save_to_disk: "{{ item.value.save_to_disk | default('True') }}"
+    save_to_disk: "{{ item.value.save_to_disk | default(True) }}"
     schemaname: "{{ item.value.schemaname | default(omit) }}"
     state: "{{ item.value.state | default('present') }}"
     timeout: "{{ item.value.timeout | default(omit) }}"
     username: "{{ item.value.username | default(omit) }}"
-  with_dict: "{{ proxysql_query_rules }}"
+  loop: "{{ proxysql_query_rules | dict2items }}"
   when: >
         proxysql_service_enabled and
         (proxysql_query_rules is defined) and

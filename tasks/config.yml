@@ -22,13 +22,21 @@
   when: proxysql_service_enabled
 
 - include_tasks: config/proxysql_backend_servers.yml
+  when: proxysql_backend_servers
 
 - include_tasks: config/proxysql_global_variables.yml
+  when: >
+        proxysql_global_variables and
+        proxysql_global_variables_kv
 
 - include_tasks: config/proxysql_mysql_users.yml
+  when: proxysql_mysql_users
 
 - include_tasks: config/proxysql_proxysql_servers.yml
+  when: proxysql_proxysql_servers
 
 - include_tasks: config/proxysql_query_rules.yml
+  when: proxysql_query_rules
 
 - include_tasks: config/proxysql_replication_hostgroups.yml
+  when: proxysql_replication_hostgroups

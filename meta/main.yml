@@ -27,5 +27,4 @@ galaxy_info:
     - mysql
     - proxysql
     - sytem
-
 dependencies: []

@@ -13,6 +13,7 @@ proxysql_dependency_pkgs:
   - libmysqlclient-dev
   - mysql-client
   - python-dev
+  - xz-utils
 
 # Type: List
 proxysql_pip_dependency_pkgs:

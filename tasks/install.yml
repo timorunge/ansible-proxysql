@@ -4,7 +4,7 @@
   package:
     name: "{{ proxysql_dependency_pkgs }}"
     state: present
-    update_cache: yes
+    update_cache: "{{ omit if ((ansible_pkg_mgr == 'dnf') and (ansible_version is version('2.7', '<'))) else 'yes' }}"
   when: proxysql_dependency_pkgs
 
 - name: Install pip dependency packages
@@ -17,7 +17,7 @@
   package:
     name: "{{ proxysql_pkgs }}"
     state: present
-    update_cache: yes
+    update_cache: "{{ omit if ((ansible_pkg_mgr == 'dnf') and (ansible_version is version('2.7', '<'))) else 'yes' }}"
   when: proxysql_use_official_repo
 
 - name: Install ProxySQL from DEB package

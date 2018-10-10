@@ -1,5 +1,4 @@
-proxysql
-========
+# proxysql
 
 This role installs and configures [ProxySQL](https://proxysql.com/) - the
 high performance, high availability, protocol aware proxy for MySQL.
@@ -9,22 +8,21 @@ Since version 2.3.0 Ansible is providing an
 itself. This Ansible role is using this functionality but adding some
 (hopefully useful) features on top:
 
-* Automatic installation for [different operating systems](#testing)
-* (Pre-) generation of [proxysql.cnf](templates/proxysql.cnf.j2)
-* Manage a
+- Automatic installation for [different operating systems](#testing)
+- (Pre-) generation of [proxysql.cnf](templates/proxysql.cnf.j2)
+- Manage a
   [ProxySQL-Cluster](https://github.com/sysown/proxysql/wiki/ProxySQL-Cluster)
   (with a
   [custom module](https://github.com/timorunge/ansible-proxysql_proxysql_servers)
   which adds the functionality to configure ProxySQL servers)
-* Differentiate between dynamic and static `global_variables` - restart
+- Differentiate between dynamic and static `global_variables` - restart
   ProxySQL if required
 
 Please also take a look at the
 "[Known issues or: Good to know](#known-issues-or-good-to-know)" section in
 this document.
 
-Requirements
-------------
+## Requirements
 
 This role requires
 [Ansible 2.5.0](https://docs.ansible.com/ansible/devel/roadmap/ROADMAP_2_5.html)
@@ -38,15 +36,13 @@ pip install ansible==2.7.0
 
 All platform requirements are listed in the metadata file.
 
-Install
--------
+## Install
 
 ```sh
 ansible-galaxy install timorunge.proxysql
 ```
 
-Role Variables
---------------
+## Role Variables
 
 The variables that can be passed to this role. For all variables, take
 a look at [defaults/main.yml](defaults/main.yml).
@@ -317,8 +313,7 @@ proxysql_mysql_users: {}
 proxysql_query_rules: {}
 ```
 
-Examples
---------
+## Examples
 
 ### 1) Full configuration example
 
@@ -557,8 +552,7 @@ You don't have to apply Ansible again after a manual restart.
     ...
 ```
 
-Known issues or: Good to know
------------------------------
+## Known issues or: Good to know
 
 ### 1) ProxySQL > 1.4.7 on Ubuntu 16.04 (fixed)
 
@@ -598,8 +592,8 @@ def literal(self, o):
 
 [`self.escape`](https://github.com/farcepest/MySQLdb1/blob/master/_mysql.c#L1226)
 should escape all special characters in the given object and is using a mapping
-dict to provide quoting functions for each type. This is `self.encoders` which
-- per default and not set different - using `MySQLdb.converters`.
+dict to provide quoting functions for each type. This is `self.encoders` which -
+per default and not set different - using `MySQLdb.converters`.
 
 The mapping for a string is `StringType: Thing2Literal`. So the string will be
 escaped with the method `Thing2Literal`.
@@ -666,8 +660,8 @@ It's not an *"big issue"* since the real value is taken correctly from the
 configuration file itself but you'll see a changeset in the next Ansible run
 which will:
 
-* Restart ProxySQL once again
-* Idempotence tests will fail (if you're not bootstrapping from scratch)
+- Restart ProxySQL once again
+- Idempotence tests will fail (if you're not bootstrapping from scratch)
 
 A potential solution could be to not set `proxysql_non_dynamic_variables` in
 the ProxySQL database.
@@ -682,8 +676,7 @@ loaded from disk".*
 For the initialisation from the `proxysql.cnf` it's important that `hostname`
 (obviously) and `port` (it's not taking the default value) are defined.
 
-Testing
--------
+## Testing
 
 [![Build Status](https://travis-ci.org/timorunge/ansible-proxysql.svg?branch=master)](https://travis-ci.org/timorunge/ansible-proxysql)
 
@@ -691,22 +684,22 @@ Tests are done with [Docker](https://www.docker.com) and
 [docker_test_runner](https://github.com/timorunge/docker-test-runner) which
 brings up the following containers with different environment settings:
 
-* CentOS 7
-* Debian 8.10 (Jessie)
-* Debian 9.4 (Stretch)
-* Ubuntu 14.04 (Trusty Tahr)
-* Ubuntu 16.04 (Xenial Xerus)
-* Ubuntu 17.10 (Artful Aardvark)
-* Ubuntu 18.04 (Bionic Beaver)
-* Ubuntu 18.10 (Cosmic Cuttlefish)
+- CentOS 7
+- Debian 8.10 (Jessie)
+- Debian 9.4 (Stretch)
+- Ubuntu 14.04 (Trusty Tahr)
+- Ubuntu 16.04 (Xenial Xerus)
+- Ubuntu 17.10 (Artful Aardvark)
+- Ubuntu 18.04 (Bionic Beaver)
+- Ubuntu 18.10 (Cosmic Cuttlefish)
 
 Ansible 2.7.0 is installed on all containers and a
 [test playbook](tests/test.yml) is getting applied.
 
 For further details and additional checks take a look at the
 [docker_test_runner configuration](tests/docker_test_runner.yml) and the
-[Docker entrypoint](tests/docker/docker-entrypoint.sh). An high level overview
-can be found in the following table:
+[Docker entrypoint](tests/docker/docker-entrypoint.sh).
+An high level overview can be found in the following table:
 
 | Distribution | Version | Repository | Package |
 |--------------|---------|------------|---------|
@@ -728,24 +721,21 @@ curl https://raw.githubusercontent.com/timorunge/docker-test-runner/master/insta
 Since the build time on Travis is limited for public repositories the
 automated tests are limited to:
 
-* CentOS 7
-* Debian 8.10 (Jessie)
-* Debian 9.4 (Stretch)
-* Ubuntu 16.04 (Xenial Xerus)
-* Ubuntu 18.04 (Bionic Beaver)
+- CentOS 7
+- Debian 8.10 (Jessie)
+- Debian 9.4 (Stretch)
+- Ubuntu 16.04 (Xenial Xerus)
+- Ubuntu 18.04 (Bionic Beaver)
 
-Dependencies
-------------
+## Dependencies
 
-* [proxysql_proxysql_servers.py](https://github.com/timorunge/ansible-proxysql_proxysql_servers)
+- [proxysql_proxysql_servers.py](https://github.com/timorunge/ansible-proxysql_proxysql_servers)
   which is added to the library folder of this role.
 
-License
--------
+## License
 
 BSD
 
-Author Information
-------------------
+## Author Information
 
 - Timo Runge

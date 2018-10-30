@@ -734,7 +734,7 @@ automated tests are limited to:
 
 ## License
 
-BSD
+[BSD 3-Clause "New" or "Revised" License](https://spdx.org/licenses/BSD-3-Clause.html)
 
 ## Author Information
 

@@ -7,6 +7,8 @@
     mode: 0400
     owner: root
     src: "{{ proxysql_proxysql_cnf_template }}"
+  tags:
+    - skip_ansible_lint
 
 - name: Ensure that ProxySQL is running
   service:

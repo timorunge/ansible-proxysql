@@ -32,3 +32,5 @@
         proxysql_restart_on_static_variables_change and
         item.changed and
         (item.item.key in proxysql_non_dynamic_variables)
+  tags:
+    - skip_ansible_lint

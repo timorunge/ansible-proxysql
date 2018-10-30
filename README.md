@@ -1,5 +1,17 @@
 # proxysql
 
+---
+
+This role is not compatible with Ansible 2.7.1 due to a bug in the migration
+from MySQLdb to PyMySQL
+([#40123](https://github.com/ansible/ansible/pull/40123)) in the MySQL module
+utils.
+
+I've submitted a PR
+([#47809](https://github.com/ansible/ansible/pull/47809)) to fix this issue.
+
+---
+
 This role installs and configures [ProxySQL](https://proxysql.com/) - the
 high performance, high availability, protocol aware proxy for MySQL.
 

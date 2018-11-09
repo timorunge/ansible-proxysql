@@ -4,13 +4,12 @@
 
 Currently this role is not compatible with ProxySQL v2.0.1.
 
-This role is not compatible with Ansible 2.7.1 or higher due to a bug in the
+This role is just compatible with Ansible 2.7.9 or higher due to a bug in the
 migration from MySQLdb to PyMySQL
 ([#40123](https://github.com/ansible/ansible/pull/40123)) in the MySQL module
 utils.
 
-I've submitted a PR
-([#47809](https://github.com/ansible/ansible/pull/47809)) to fix this issue.
+Release 0.3.0 is compatible with Ansible 2.7.0 or lower.
 
 ---
 
@@ -45,7 +44,7 @@ or higher.
 You can simply use pip to install (and define) a stable version:
 
 ```sh
-pip install ansible==2.7.0
+pip install ansible==2.7.9
 ```
 
 All platform requirements are listed in the metadata file.
@@ -844,15 +843,15 @@ Tests are done with [Docker](https://www.docker.com) and
 brings up the following containers with different environment settings:
 
 - CentOS 7
-- Debian 8.10 (Jessie)
-- Debian 9.4 (Stretch)
+- Debian 8 (Jessie)
+- Debian 9 (Stretch)
 - Ubuntu 14.04 (Trusty Tahr)
 - Ubuntu 16.04 (Xenial Xerus)
 - Ubuntu 17.10 (Artful Aardvark)
 - Ubuntu 18.04 (Bionic Beaver)
 - Ubuntu 18.10 (Cosmic Cuttlefish)
 
-Ansible 2.7.0 is installed on all containers and a
+Ansible 2.7.9 is installed on all containers and a
 [test playbook](tests/test.yml) is getting applied.
 
 For further details and additional checks take a look at the
@@ -863,13 +862,14 @@ An high level overview can be found in the following table:
 | Distribution | Version | Official repository | Percona repository | Package |
 |--------------|---------|---------------------|--------------------|---------|
 | CentOS       | 7       | yes                 | no                 | 1.4.14  |
-| Debian       | 8.10    | yes                 | yes                | 1.4.14  |
-| Debian       | 9.4     | yes                 | yes                | 1.4.14  |
+| Debian       | 8       | yes                 | yes                | 1.4.14  |
+| Debian       | 9       | yes                 | yes                | 1.4.14  |
 | Ubuntu       | 14.04   | yes                 | yes                | 1.4.14  |
 | Ubuntu       | 16.04   | yes                 | yes                | 1.4.14  |
 | Ubuntu       | 17.10   | no                  | yes                | 1.4.14  |
 | Ubuntu       | 18.04   | no                  | yes                | 1.4.14  |
 | Ubuntu       | 18.10   | no                  | yes                | 1.4.14  |
+
 
 ```sh
 # Testing locally:
@@ -881,8 +881,8 @@ Since the build time on Travis is limited for public repositories the
 automated tests are limited to:
 
 - CentOS 7
-- Debian 8.10 (Jessie)
-- Debian 9.4 (Stretch)
+- Debian 8 (Jessie)
+- Debian 9 (Stretch)
 - Ubuntu 16.04 (Xenial Xerus)
 - Ubuntu 18.04 (Bionic Beaver)
 

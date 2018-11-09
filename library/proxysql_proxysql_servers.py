@@ -1,6 +1,5 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-# Copyright: (c) 2018, Ansible Project
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import absolute_import, division, print_function
@@ -9,27 +8,26 @@ __metaclass__ = type
 DOCUMENTATION = '''
 ---
 module: proxysql_proxysql_servers
-version_added: "2.5"
 author: "Timo Runge (@timorunge)"
-short_description: Adds or removes proxysql hosts from proxysql admin interface.
+short_description: Adds or removes ProxySQL hosts from ProxySQL admin interface.
 description:
-   - The M(proxysql_proxysql_servers) module adds or removes proxysql hosts using
-     the proxysql admin interface.
+   - The M(proxysql_proxysql_servers) module adds or removes ProxySQL hosts using
+     the ProxySQL admin interface.
 options:
   hostname:
     description:
-      - The ip address at which the proxysql instance can be contacted.
+      - The ip address at which the ProxySQL instance can be contacted.
     required: True
   port:
     description:
-      - The port at which the proxysql instance can be contacted.
+      - The port at which the ProxySQL instance can be contacted.
     default: 6032
   weight:
     description:
       - Currently unused, but in the roadmap for future enhancements.
         The bigger the weight of a server relative to other weights, the higher
         the probability of the server being chosen from the hostgroup. If
-        omitted the proxysql database default for I(weight) is 0.
+        omitted the ProxySQL database default for I(weight) is 0.
   comment:
     description:
       - Text field that can be used for any purposed defined by the user.
@@ -48,32 +46,32 @@ extends_documentation_fragment:
 
 EXAMPLES = '''
 ---
-# This example adds a server, it saves the proxysql server config to disk, but
-# avoids loading the proxysql server config to runtime (this might be because
+# This example adds a server, it saves the ProxySQL server config to disk, but
+# avoids loading the ProxySQL server config to runtime (this might be because
 # several servers are being added and the user wants to push the config to
 # runtime in a single batch using the M(proxysql_manage_config) module). It
-# uses supplied credentials to connect to the proxysql admin interface.
+# uses supplied credentials to connect to the ProxySQL admin interface.
 
 - proxysql_proxysql_servers:
-    login_user: 'admin'
-    login_password: 'admin'
-    hostname: 'mysql01'
+    login_user: admin
+    login_password: admin
+    hostname: mysql01
     state: present
     load_to_runtime: False
 
-# This example removes a server, saves the proxysql server config to disk, and
-# dynamically loads the proxysql server config to runtime. It uses credentials
-# in a supplied config file to connect to the proxysql admin interface.
+# This example removes a server, saves the ProxySQL server config to disk, and
+# dynamically loads the ProxySQL server config to runtime. It uses credentials
+# in a supplied config file to connect to the ProxySQL admin interface.
 
 - proxysql_proxysql_servers:
     config_file: '~/proxysql.cnf'
-    hostname: 'mysql02'
+    hostname: mysql02
     state: absent
 '''
 
 RETURN = '''
 stdout:
-    description: The proxysql host modified or removed from proxysql
+    description: The ProxySQL host modified or removed from ProxySQL
     returned: On create/update will return the newly modified host, on delete
               it will return the deleted record.
     type: dict
@@ -97,17 +95,10 @@ ANSIBLE_METADATA = {'metadata_version': '1.1',
 
 
 from ansible.module_utils.basic import AnsibleModule
-from ansible.module_utils.mysql import mysql_connect
+from ansible.module_utils.mysql import mysql_connect, mysql_driver, mysql_driver_fail_msg
 from ansible.module_utils.six import iteritems
 from ansible.module_utils._text import to_native
 
-try:
-    import MySQLdb
-    import MySQLdb.cursors
-except ImportError:
-    MYSQLDB_FOUND = False
-else:
-    MYSQLDB_FOUND = True
 
 # ===========================================
 # proxysql module specific support methods.
@@ -127,10 +118,8 @@ def perform_checks(module):
             msg="port must be a valid unix port number (0-65535)"
         )
 
-    if not MYSQLDB_FOUND:
-        module.fail_json(
-            msg="the python mysqldb module is required"
-        )
+    if mysql_driver is None:
+        module.fail_json(msg=mysql_driver_fail_msg)
 
 
 def save_config_to_disk(cursor):
@@ -367,10 +356,10 @@ def main():
                                login_user,
                                login_password,
                                config_file,
-                               cursor_class=MySQLdb.cursors.DictCursor)
-    except MySQLdb.Error as e:
+                               cursor_class=mysql_driver.cursors.DictCursor)
+    except mysql_driver.Error as e:
         module.fail_json(
-            msg="unable to connect to ProxySQL Admin Module.. %s" % to_native(e)
+            msg="Unable to connect to ProxySQL Admin Module.. %s" % to_native(e)
         )
 
     proxysql_server = ProxySQLServer(module)
@@ -397,9 +386,9 @@ def main():
                                  " and doesn't need to be updated.")
                 result['server'] = \
                     proxysql_server.get_server_config(cursor)
-        except MySQLdb.Error as e:
+        except mysql_driver.Error as e:
             module.fail_json(
-                msg="unable to modify server.. %s" % to_native(e)
+                msg="Unable to modify server.. %s" % to_native(e)
             )
 
     elif proxysql_server.state == "absent":
@@ -412,9 +401,9 @@ def main():
                 result['changed'] = False
                 result['msg'] = ("The server is already absent from the" +
                                  " proxysql_servers memory configuration")
-        except MySQLdb.Error as e:
+        except mysql_driver.Error as e:
             module.fail_json(
-                msg="unable to remove server.. %s" % to_native(e)
+                msg="Unable to remove server.. %s" % to_native(e)
             )
 
     module.exit_json(**result)

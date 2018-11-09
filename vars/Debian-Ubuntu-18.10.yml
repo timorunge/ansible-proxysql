@@ -13,7 +13,7 @@ proxysql_dependency_pkgs:
   - libcrypto++6
   - libssl1.0.0
   - mysql-client
-  - python-mysqldb
+  - python-pymysql
   - xz-utils
 
 # Type: List

@@ -10,9 +10,12 @@ proxysql_pkg_url: "{{ proxysql_download_url }}/v{{ proxysql_version }}/{{ proxys
 
 # Type: List
 proxysql_dependency_pkgs:
+  - build-essential
+  - libmysqlclient-dev
   - mysql-client
-  - python-pymysql
+  - python-dev
   - xz-utils
 
 # Type: List
-proxysql_pip_dependency_pkgs: []
+proxysql_pip_dependency_pkgs:
+  - mysqlclient>=1.3.8

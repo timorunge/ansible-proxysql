@@ -11,7 +11,7 @@ proxysql_pkg_url: "{{ proxysql_download_url }}/v{{ proxysql_version }}/{{ proxys
 # Type: List
 proxysql_dependency_pkgs:
   - mysql-client
-  - python-pymysql
+  - python-mysqldb
   - xz-utils
 
 # Type: List

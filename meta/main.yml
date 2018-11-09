@@ -8,7 +8,7 @@ galaxy_info:
                the high performance, high availability, protocol aware proxy for MySQL.
   role_name: proxysql
   license: BSD-3-Clause
-  min_ansible_version: 2.5.0
+  min_ansible_version: 2.7.9
   platforms:
   - name: EL
     versions:

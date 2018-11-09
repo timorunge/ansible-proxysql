@@ -10,14 +10,14 @@ disable_logging: False
 
 docker_image_build_args:
   ansible_role: timorunge.proxysql
-  ansible_version: 2.7.0
+  ansible_version: 2.7.9
 
 docker_image_path: "__PATH__/tests/docker"
 
 docker_images:
   - CentOS_7
-  - Debian_8_10
-  - Debian_9_4
+  - Debian_8
+  - Debian_9
   - Ubuntu_16_04
   - Ubuntu_18_04
 

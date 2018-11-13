@@ -15,6 +15,7 @@ proxysql_ignore_template_keys:
   - login_host
   - login_password
   - login_user
+  - state
 
 # For those variables ProxySQL needs a restart to take effect
 # Type: List

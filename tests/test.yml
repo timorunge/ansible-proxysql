@@ -88,6 +88,19 @@
         max_replication_lag: 5
         status: OFFLINE_HARD
         weight: 1
+      mysql-srv4-hg2:
+        comment: mysql-srv4-hg2
+        hostgroup: 2
+        hostname: 172.16.77.104
+        login_host: "{{ proxysql_login_admin_host }}"
+        login_password: "{{ proxysql_login_admin_password }}"
+        login_port: "{{ proxysql_login_admin_port }}"
+        login_user: "{{ proxysql_login_admin_user }}"
+        max_connections: 2000
+        max_replication_lag: 5
+        status: OFFLINE_HARD
+        state: absent
+        weight: 1
     proxysql_proxysql_servers:
       proxysql-srv-1:
         comment: proxysql-srv-1
@@ -145,6 +158,21 @@
         password: dr0wssaP
         transaction_persistent: 1
         username: user2
+      user3:
+        active: 1
+        backend: 1
+        default_hostgroup: 1
+        fast_forward: 0
+        frontend: 1
+        login_host: "{{ proxysql_login_admin_host }}"
+        login_password: "{{ proxysql_login_admin_password }}"
+        login_port: "{{ proxysql_login_admin_port }}"
+        login_user: "{{ proxysql_login_admin_user }}"
+        max_connections: 1000
+        password: w0rdPass
+        state: absent
+        transaction_persistent: 1
+        username: user3
     proxysql_query_rules:
       catchall:
         active: 1
@@ -182,5 +210,18 @@
         match_pattern: ^SELECT.*
         negate_match_pattern: 0
         rule_id: 3
+      delete:
+        active: 0
+        apply: 0
+        destination_hostgroup: 1
+        flagIN: 0
+        login_host: "{{ proxysql_login_admin_host }}"
+        login_password: "{{ proxysql_login_admin_password }}"
+        login_port: "{{ proxysql_login_admin_port }}"
+        login_user: "{{ proxysql_login_admin_user }}"
+        match_pattern: ^DELETE.*
+        negate_match_pattern: 0
+        rule_id: 4
+        state: absent
   roles:
     - timorunge.proxysql

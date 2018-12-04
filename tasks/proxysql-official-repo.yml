@@ -4,6 +4,10 @@
   apt_key:
     state: present
     url: http://repo.proxysql.com/ProxySQL/repo_pub_key
+  delay: 10
+  register: result
+  retries: 3
+  until: result is succeeded
   when: >
         (proxysql_use_official_repo) and
         (ansible_os_family == "Debian")

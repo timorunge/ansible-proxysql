@@ -5,12 +5,20 @@
     name: "{{ proxysql_dependency_pkgs }}"
     state: present
     update_cache: "{{ omit if ((ansible_pkg_mgr == 'dnf') and (ansible_version is version('2.7', '<'))) else 'yes' }}"
+  delay: 10
+  register: result
+  retries: 3
+  until: result is succeeded
   when: proxysql_dependency_pkgs
 
 - name: Install pip dependency packages
   pip:
     name: "{{ proxysql_pip_dependency_pkgs }}"
     state: present
+  delay: 10
+  register: result
+  retries: 3
+  until: result is succeeded
   when: proxysql_pip_dependency_pkgs
 
 - name: Install ProxySQL from repository
@@ -18,12 +26,20 @@
     name: "{{ proxysql_pkgs }}"
     state: present
     update_cache: "{{ omit if ((ansible_pkg_mgr == 'dnf') and (ansible_version is version('2.7', '<'))) else 'yes' }}"
+  delay: 10
+  register: result
+  retries: 3
+  until: result is succeeded
   when: proxysql_use_official_repo
 
 - name: Install ProxySQL from DEB package
   apt:
     deb: "{{ proxysql_pkg_url }}"
     state: present
+  delay: 10
+  register: result
+  retries: 3
+  until: result is succeeded
   when: >
         (not proxysql_use_official_repo) and
         (ansible_os_family == "Debian")
@@ -32,6 +48,10 @@
   yum:
     name: "{{ proxysql_pkg_url }}"
     state: present
+  delay: 10
+  register: result
+  retries: 3
+  until: result is succeeded
   when: >
         (not proxysql_use_official_repo) and
         (ansible_os_family == "RedHat")

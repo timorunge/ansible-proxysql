@@ -2,8 +2,8 @@
 
 ---
 
-This role is not compatible with Ansible 2.7.1 due to a bug in the migration
-from MySQLdb to PyMySQL
+This role is not compatible with Ansible 2.7.1 or higher due to a bug in the
+migration from MySQLdb to PyMySQL
 ([#40123](https://github.com/ansible/ansible/pull/40123)) in the MySQL module
 utils.
 
@@ -79,7 +79,7 @@ proxysql_use_official_repo: True
 # The ProxySQL version which should be installed if not using the ProxySQL
 # repository.
 # Type: Int
-proxysql_version: 1.4.12
+proxysql_version: 1.4.13
 
 # Configuration
 
@@ -330,7 +330,7 @@ proxysql_query_rules: {}
 ### 1) Full configuration example
 
 Here you can see a full example of a configuration of ProxySQL. In this case
-the role will download the `1.4.12` package directly and not use the repository
+the role will download the `1.4.13` package directly and not use the repository
 (`proxysql_use_official_repo` is set to `False`).
 
 This is basically (with some small changes) the [test.yml](tests/test.yml)
@@ -340,7 +340,7 @@ file which is used for testing.
 - hosts: proxysql
   gather_facts: True
   vars:
-    proxysql_version: 1.4.12
+    proxysql_version: 1.4.13
     proxysql_service_enabled: True
     proxysql_use_official_repo: True
     proxysql_login_admin_host: 127.0.0.1
@@ -715,14 +715,14 @@ An high level overview can be found in the following table:
 
 | Distribution | Version | Repository | Package |
 |--------------|---------|------------|---------|
-| CentOS       | 7       | yes        | 1.4.12  |
-| Debian       | 8.10    | yes        | 1.4.12  |
-| Debian       | 9.4     | yes        | 1.4.12  |
-| Ubuntu       | 14.04   | yes        | 1.4.12  |
-| Ubuntu       | 16.04   | yes        | 1.4.12  |
-| Ubuntu       | 17.10   | no         | 1.4.12  |
-| Ubuntu       | 18.04   | no         | 1.4.12  |
-| Ubuntu       | 18.10   | no         | 1.4.12  |
+| CentOS       | 7       | yes        | 1.4.13  |
+| Debian       | 8.10    | yes        | 1.4.13  |
+| Debian       | 9.4     | yes        | 1.4.13  |
+| Ubuntu       | 14.04   | yes        | 1.4.13  |
+| Ubuntu       | 16.04   | yes        | 1.4.13  |
+| Ubuntu       | 17.10   | no         | 1.4.13  |
+| Ubuntu       | 18.04   | no         | 1.4.13  |
+| Ubuntu       | 18.10   | no         | 1.4.13  |
 
 ```sh
 # Testing locally:

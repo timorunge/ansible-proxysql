@@ -19,7 +19,7 @@ proxysql_use_official_repo: True
 # The ProxySQL version which should be installed if not using the ProxySQL
 # repository.
 # Type: Int
-proxysql_version: 1.4.13
+proxysql_version: 1.4.14
 
 # Configuration
 

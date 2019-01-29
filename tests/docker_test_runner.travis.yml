@@ -28,9 +28,9 @@ docker_container_environments:
       - Ubuntu_17_10
       - Ubuntu_18_04
       - Ubuntu_18_10
-  "1_4_13":
+  "1_4_14":
     proxysql_use_official_repo: False
-    proxysql_version: 1.4.13
+    proxysql_version: 1.4.14
 
 docker_container_volumes:
   "__PATH__":

@@ -1,0 +1,8 @@
+# {{ ansible_managed }}
+# file proxysql-admin.cfg
+
+{% if proxysql_percona_admin_tool is defined %}
+  {% for key, value in proxysql_percona_admin_tool.items() %}
+    export {{ key }}="{{ value }}"
+  {% endfor %}
+{% endif %}

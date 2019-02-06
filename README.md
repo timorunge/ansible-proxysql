@@ -73,10 +73,21 @@ proxysql_restart_on_static_variables_change: True
 
 # Repository
 
-# Use the official ProxySQL repository. If set to `False` the module will
-# automatically download the defined version as a package.
+# If both, `proxysql_use_official_repo` and `proxysql_use_percona_repo` are set
+# to `False` the module will automatically download the defined
+# `proxysql_version` as a package from Github and install the same.
+
+# Use the official ProxySQL repository.
 # Type: Bool
 proxysql_use_official_repo: True
+
+# Use the Percona repository.
+# Type: Bool
+proxysql_use_percona_repo: False
+
+# Define the repository version for the percona repository.
+# Type: Str
+proxysql_percona_release: latest
 
 # The ProxySQL version which should be installed if not using the ProxySQL
 # repository.
@@ -92,6 +103,10 @@ proxysql_datadir: /var/lib/proxysql
 # Define the proxysql.cnf template
 # Type: Str
 proxysql_proxysql_cnf_template: proxysql.cnf.j2
+
+# Define the proxysql-admin.cnf template
+# Type: Str
+proxysql_proxysql_admin_cnf_template: proxysql-admin.cnf.j2
 
 # The login variables for the configuration of ProxySQL itself. They are just
 # used inside the `main.yml` file and here to simplify the configuration.
@@ -325,6 +340,39 @@ proxysql_mysql_users: {}
 #     negate_match_pattern: 0
 #     rule_id: 3
 proxysql_query_rules: {}
+
+# Percona ProxySQL Admin
+# The ProxySQL Admin (proxysql-admin) solution configures Percona
+# XtraDB cluster nodes into ProxySQL.
+
+# For a full reference take a look at:
+# https://github.com/percona/proxysql-admin-tool
+
+# Format:
+# Type: Dict
+# proxysql_percona_admin_tool:
+#   PROXYSQL_DATADIR: "{{ proxysql_datadir }}"
+#   PROXYSQL_USERNAME: "{{ proxysql_login_admin_user }}"
+#   PROXYSQL_PASSWORD: "{{ proxysql_login_admin_password }}"
+#   PROXYSQL_HOSTNAME: "{{ proxysql_login_admin_host }}"
+#   PROXYSQL_PORT: "{{ proxysql_login_admin_port }}"
+#   CLUSTER_USERNAME: admin
+#   CLUSTER_PASSWORD: admin
+#   CLUSTER_HOSTNAME: localhost
+#   CLUSTER_PORT: 3306
+#   MONITOR_USERNAME: monitor
+#   MONITOR_PASSWORD: monit0r
+#   CLUSTER_APP_USERNAME: proxysql_user
+#   CLUSTER_APP_PASSWORD: passw0rd
+#   WRITE_HOSTGROUP_ID: 10
+#   READ_HOSTGROUP_ID: 11
+#   MODE: singlewrite
+proxysql_percona_admin_tool:
+  PROXYSQL_DATADIR: "{{ proxysql_datadir }}"
+  PROXYSQL_USERNAME: "{{ proxysql_login_admin_user }}"
+  PROXYSQL_PASSWORD: "{{ proxysql_login_admin_password }}"
+  PROXYSQL_HOSTNAME: "{{ proxysql_login_admin_host }}"
+  PROXYSQL_PORT: "{{ proxysql_login_admin_port }}"
 ```
 
 ## Examples
@@ -530,12 +578,17 @@ file which is used for testing.
 Use the ProxySQL repository (`proxysql_use_official_repo` is set to `True`).
 ProxySQL itself is not providing packages in the repository for Ubuntu > 16.04.
 
-Just set the `proxysql_use_official_repo` to `False` for newer Ubuntu releases.
+Just set the `proxysql_use_official_repo` to `False` for newer Ubuntu releases
+or use the Percona repository.
+
+Take a look at the [testing section](#testing) for the coverage of the official
+repository.
 
 ```yaml
 - hosts: proxysql
   vars:
     proxysql_use_official_repo: True
+    proxysql_use_percona_repo: False
     proxysql_login_admin_host: 127.0.0.1
     proxysql_login_admin_password: admin
     proxysql_login_admin_port: 6032
@@ -543,7 +596,46 @@ Just set the `proxysql_use_official_repo` to `False` for newer Ubuntu releases.
     ...
 ```
 
-### 3) Don't restart ProxySQL after static variable change
+### 3) Installation from the Percona repository
+
+Use the ProxySQL repository (`proxysql_use_percona_repo` is set to `True`).
+
+Take a look at the [testing section](#testing) for the coverage of the Percona
+repository.
+
+```yaml
+- hosts: proxysql
+  vars:
+    proxysql_use_official_repo: False
+    proxysql_use_percona_repo: True
+    proxysql_login_admin_host: 127.0.0.1
+    proxysql_login_admin_password: admin
+    proxysql_login_admin_port: 6032
+    proxysql_login_admin_user: admin
+    ...
+```
+
+### 4) Installation from deb or rpm package
+
+You can install ProxySQL directly from a
+[GitHub release](https://github.com/sysown/proxysql/releases). Just define the
+`proxysql_version`. Set `proxysql_use_official_repo` and
+`proxysql_use_percona_repo` to `False`.
+
+```yaml
+- hosts: proxysql
+  vars:
+    proxysql_version: 1.4.14
+    proxysql_use_official_repo: False
+    proxysql_use_percona_repo: False
+    proxysql_login_admin_host: 127.0.0.1
+    proxysql_login_admin_password: admin
+    proxysql_login_admin_port: 6032
+    proxysql_login_admin_user: admin
+    ...
+```
+
+### 5) Don't restart ProxySQL after static variable change
 
 If you'd like to restart ProxySQL on your own after a config change of static
 variables you have to set `proxysql_restart_on_static_variables_change` to
@@ -690,6 +782,59 @@ loaded from disk".*
 For the initialisation from the `proxysql.cnf` it's important that `hostname`
 (obviously) and `port` (it's not taking the default value) are defined.
 
+### 5) ProxySQL and the Percona repository on CentOS...
+
+...is not working because of some dependency issues.
+
+Technically we need the following packages to apply Ansible correctly:
+
+```yaml
+proxysql_dependency_pkgs:
+  - MySQL-python
+  - mysql
+```
+
+With the enabled Percona repository the package dependencies for `MySQL-python`
+and `mysql` are clashing.
+
+```bash
+yum install MySQL-python
+...
+============================================================================================
+ Package                    Arch     Version                 Repository                Size
+============================================================================================
+ Installing:
+  MySQL-python              x86_64   1.2.5-1.el7             base                      90 k
+ Installing for dependencies:
+  Percona-Server-shared-56  x86_64   5.6.43-rel84.3.el7      percona-release-x86_64   619 k
+
+Transaction Summary
+============================================================================================
+Install  1 Package (+1 Dependent package)
+
+```
+
+```bash
+yum install mysql
+...
+
+============================================================================================
+ Package                          Arch    Version             Repository               Size
+============================================================================================
+ Installing:
+  Percona-Server-client-57         x86_64  5.7.24-27.1.el7    percona-release-x86_64  6.8 M
+ Installing for dependencies:
+  Percona-Server-shared-57         x86_64  5.7.24-27.1.el7    percona-release-x86_64  748 k
+  Percona-Server-shared-compat-57  x86_64  5.7.24-27.1.el7    percona-release-x86_64  1.2 M
+
+Transaction Summary
+============================================================================================
+Install  1 Package (+2 Dependent packages)
+```
+
+As you can see, `MySQL-python` is depending on `Percona-Server-shared-56` while
+`mysql` is depending on `Percona-Server-shared-57`.
+
 ## Testing
 
 [![Build Status](https://travis-ci.org/timorunge/ansible-proxysql.svg?branch=master)](https://travis-ci.org/timorunge/ansible-proxysql)
@@ -715,16 +860,16 @@ For further details and additional checks take a look at the
 [Docker entrypoint](tests/docker/docker-entrypoint.sh).
 An high level overview can be found in the following table:
 
-| Distribution | Version | Repository | Package |
-|--------------|---------|------------|---------|
-| CentOS       | 7       | yes        | 1.4.14  |
-| Debian       | 8.10    | yes        | 1.4.14  |
-| Debian       | 9.4     | yes        | 1.4.14  |
-| Ubuntu       | 14.04   | yes        | 1.4.14  |
-| Ubuntu       | 16.04   | yes        | 1.4.14  |
-| Ubuntu       | 17.10   | no         | 1.4.14  |
-| Ubuntu       | 18.04   | no         | 1.4.14  |
-| Ubuntu       | 18.10   | no         | 1.4.14  |
+| Distribution | Version | Official repository | Percona repository | Package |
+|--------------|---------|---------------------|--------------------|---------|
+| CentOS       | 7       | yes                 | no                 | 1.4.14  |
+| Debian       | 8.10    | yes                 | yes                | 1.4.14  |
+| Debian       | 9.4     | yes                 | yes                | 1.4.14  |
+| Ubuntu       | 14.04   | yes                 | yes                | 1.4.14  |
+| Ubuntu       | 16.04   | yes                 | yes                | 1.4.14  |
+| Ubuntu       | 17.10   | no                  | yes                | 1.4.14  |
+| Ubuntu       | 18.04   | no                  | yes                | 1.4.14  |
+| Ubuntu       | 18.10   | no                  | yes                | 1.4.14  |
 
 ```sh
 # Testing locally:

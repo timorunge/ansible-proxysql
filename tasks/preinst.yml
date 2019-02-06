@@ -1,0 +1,22 @@
+---
+
+- name: Create ProxySQL config file
+  template:
+    dest: /etc/proxysql.cnf
+    group: "{{ proxysql_cnf_group | default ('root') }}"
+    mode: "{{ proxysql_cnf_permissions | default('0600') }}"
+    owner: "{{ proxysql_cnf_owner | default ('root') }}"
+    src: "{{ proxysql_proxysql_cnf_template }}"
+  tags:
+    - skip_ansible_lint
+
+- name: Create ProxySQL admin config file
+  template:
+    dest: /etc/proxysql-admin.cnf
+    group: "{{ proxysql_admin_cnf_group | default ('root') }}"
+    mode: "{{ proxysql_admin_cnf_permissions | default('0600') }}"
+    owner: "{{ proxysql_admin_cnf_owner | default ('root') }}"
+    src: "{{ proxysql_proxysql_admin_cnf_template }}"
+  tags:
+    - skip_ansible_lint
+  when: proxysql_use_percona_repo

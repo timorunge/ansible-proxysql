@@ -11,10 +11,21 @@ proxysql_restart_on_static_variables_change: True
 
 # Repository
 
-# Use the official ProxySQL repository. If set to `False` the module will
-# automatically download the defined version as a package.
+# If both, `proxysql_use_official_repo` and `proxysql_use_percona_repo` are set
+# to `False` the module will automatically download the defined
+# `proxysql_version` as a package from Github and install the same.
+
+# Use the official ProxySQL repository.
 # Type: Bool
 proxysql_use_official_repo: True
+
+# Use the Percona repository.
+# Type: Bool
+proxysql_use_percona_repo: False
+
+# Define the repository version for the percona repository.
+# Type: Str
+proxysql_percona_release: latest
 
 # The ProxySQL version which should be installed if not using the ProxySQL
 # repository.
@@ -30,6 +41,10 @@ proxysql_datadir: /var/lib/proxysql
 # Define the proxysql.cnf template
 # Type: Str
 proxysql_proxysql_cnf_template: proxysql.cnf.j2
+
+# Define the proxysql-admin.cnf template
+# Type: Str
+proxysql_proxysql_admin_cnf_template: proxysql-admin.cnf.j2
 
 # The login variables for the configuration of ProxySQL itself. They are just
 # used inside the `main.yml` file and here to simplify the configuration.
@@ -263,3 +278,36 @@ proxysql_mysql_users: {}
 #     negate_match_pattern: 0
 #     rule_id: 3
 proxysql_query_rules: {}
+
+# Percona ProxySQL Admin
+# The ProxySQL Admin (proxysql-admin) solution configures Percona
+# XtraDB cluster nodes into ProxySQL.
+
+# For a full reference take a look at:
+# https://github.com/percona/proxysql-admin-tool
+
+# Format:
+# Type: Dict
+# proxysql_percona_admin_tool:
+#   PROXYSQL_DATADIR: "{{ proxysql_datadir }}"
+#   PROXYSQL_USERNAME: "{{ proxysql_login_admin_user }}"
+#   PROXYSQL_PASSWORD: "{{ proxysql_login_admin_password }}"
+#   PROXYSQL_HOSTNAME: "{{ proxysql_login_admin_host }}"
+#   PROXYSQL_PORT: "{{ proxysql_login_admin_port }}"
+#   CLUSTER_USERNAME: admin
+#   CLUSTER_PASSWORD: admin
+#   CLUSTER_HOSTNAME: localhost
+#   CLUSTER_PORT: 3306
+#   MONITOR_USERNAME: monitor
+#   MONITOR_PASSWORD: monit0r
+#   CLUSTER_APP_USERNAME: proxysql_user
+#   CLUSTER_APP_PASSWORD: passw0rd
+#   WRITE_HOSTGROUP_ID: 10
+#   READ_HOSTGROUP_ID: 11
+#   MODE: singlewrite
+proxysql_percona_admin_tool:
+  PROXYSQL_DATADIR: "{{ proxysql_datadir }}"
+  PROXYSQL_USERNAME: "{{ proxysql_login_admin_user }}"
+  PROXYSQL_PASSWORD: "{{ proxysql_login_admin_password }}"
+  PROXYSQL_HOSTNAME: "{{ proxysql_login_admin_host }}"
+  PROXYSQL_PORT: "{{ proxysql_login_admin_port }}"

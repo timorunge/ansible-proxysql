@@ -5,3 +5,13 @@
     proxysql_service_enabled_state: no
     proxysql_service_state: stopped
   when: not proxysql_service_enabled
+
+- name: Set facts for ProxySQL config file permissions
+  set_fact:
+    proxysql_admin_cnf_group: proxysql
+    proxysql_admin_cnf_owner: root
+    proxysql_admin_cnf_permissions: "0640"
+    proxysql_cnf_group: proxysql
+    proxysql_cnf_owner: root
+    proxysql_cnf_permissions: "0640"
+  when: proxysql_use_percona_repo

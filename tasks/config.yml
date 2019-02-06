@@ -1,15 +1,5 @@
 ---
 
-- name: Create ProxySQL config file
-  template:
-    dest: /etc/proxysql.cnf
-    group: root
-    mode: 0400
-    owner: root
-    src: "{{ proxysql_proxysql_cnf_template }}"
-  tags:
-    - skip_ansible_lint
-
 - name: Ensure that ProxySQL is running
   service:
     enabled: "{{ proxysql_service_enabled_state | default('yes') }}"

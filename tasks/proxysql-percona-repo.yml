@@ -1,0 +1,25 @@
+---
+
+- name: Ensure Percona APT repository
+  apt:
+    deb: "{{ proxysql_percona_repo }}"
+    state: present
+  delay: 10
+  register: result
+  retries: 3
+  until: result is succeeded
+  when: >
+        (proxysql_use_percona_repo) and
+        (ansible_os_family == "Debian")
+
+- name: Ensure Percona YUM repository
+  yum:
+    name: "{{ proxysql_percona_repo }}"
+    state: present
+  delay: 10
+  register: result
+  retries: 3
+  until: result is succeeded
+  when: >
+        (proxysql_use_percona_repo) and
+        (ansible_os_family == "RedHat")

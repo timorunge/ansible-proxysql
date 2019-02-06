@@ -22,14 +22,19 @@ docker_images:
   - Ubuntu_18_04
 
 docker_container_environments:
-  pkg:
+  pkg_official_repo:
     proxysql_use_official_repo: True
+    proxysql_use_percona_repo: False
     skip_images:
-      - Ubuntu_17_10
       - Ubuntu_18_04
-      - Ubuntu_18_10
+  pkg_percona_repo:
+    proxysql_use_official_repo: False
+    proxysql_use_percona_repo: True
+    skip_images:
+      - CentOS_7
   "1_4_14":
     proxysql_use_official_repo: False
+    proxysql_use_percona_repo: False
     proxysql_version: 1.4.14
 
 docker_container_volumes:

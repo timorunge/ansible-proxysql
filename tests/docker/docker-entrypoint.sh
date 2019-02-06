@@ -6,7 +6,10 @@ printf "[client]\nhost=127.0.0.1\npassword=admin\nport=6032\nuser=admin\n" > /an
 
 test -z ${proxysql_use_official_repo} && \
   echo "Missing environment variable: proxysql_use_official_repo" && exit 1
+test -z ${proxysql_use_percona_repo} && \
+  echo "Missing environment variable: proxysql_use_percona_repo" && exit 1
 (test "${proxysql_use_official_repo}" = "False" && \
+  test "${proxysql_use_percona_repo}" = "False" && \
   test -z ${proxysql_version}) && \
   echo "Missing environment variable: proxysql_version" && exit 1
 
@@ -24,6 +27,7 @@ ansible-playbook /ansible/test.yml \
   --connection=local \
   --become \
   -e "{ proxysql_use_official_repo: ${proxysql_use_official_repo} }" \
+  -e "{ proxysql_use_percona_repo: ${proxysql_use_percona_repo} }" \
   -e "{ proxysql_version: ${proxysql_version} }" \
   $(test -z ${travis} && echo "-vvvv")
 
@@ -32,6 +36,7 @@ ansible-playbook /ansible/test.yml \
   --connection=local \
   --become \
   -e "{ proxysql_use_official_repo: ${proxysql_use_official_repo} }" \
+  -e "{ proxysql_use_percona_repo: ${proxysql_use_percona_repo} }" \
   -e "{ proxysql_version: ${proxysql_version} }" | \
   grep -q "changed=0.*failed=0" && \
   (echo "Idempotence test: pass" && exit 0) || \

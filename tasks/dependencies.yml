@@ -1,0 +1,38 @@
+---
+
+- name: Install dependency packages
+  package:
+    name: "{{ proxysql_dependency_pkgs }}"
+    state: present
+    update_cache: "{{ omit if ((ansible_pkg_mgr == 'dnf') and (ansible_version is version('2.7', '<'))) else 'yes' }}"
+  delay: 10
+  register: result
+  retries: 3
+  until: result is succeeded
+  when: proxysql_dependency_pkgs
+
+- name: Install pip dependency packages
+  pip:
+    name: "{{ proxysql_pip_dependency_pkgs }}"
+    state: present
+  delay: 10
+  register: result
+  retries: 3
+  until: result is succeeded
+  when: proxysql_pip_dependency_pkgs
+
+- name: Create ProxySQL group
+  group:
+    name: proxysql
+    state: present
+  when: proxysql_use_percona_repo
+
+- name: Create ProxySQL user
+  user:
+    create_home: no
+    comment: ProxySQL
+    groups: proxysql
+    home: "{{ proxysql_datadir }}"
+    name: proxysql
+    shell: /bin/false
+  when: proxysql_use_percona_repo

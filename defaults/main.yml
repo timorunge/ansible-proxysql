@@ -30,7 +30,7 @@ proxysql_percona_release: latest
 # The ProxySQL version which should be installed if not using the ProxySQL
 # repository.
 # Type: Int
-proxysql_version: 1.4.14
+proxysql_version: 1.4.15
 
 # Configuration
 

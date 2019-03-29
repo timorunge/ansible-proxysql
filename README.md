@@ -91,7 +91,7 @@ proxysql_percona_release: latest
 # The ProxySQL version which should be installed if not using the ProxySQL
 # repository.
 # Type: Int
-proxysql_version: 1.4.14
+proxysql_version: 1.4.15
 
 # Configuration
 
@@ -379,7 +379,7 @@ proxysql_percona_admin_tool:
 ### 1) Full configuration example
 
 Here you can see a full example of a configuration of ProxySQL. In this case
-the role will download the `1.4.14` package directly and not use the repository
+the role will download the `1.4.15` package directly and not use the repository
 (`proxysql_use_official_repo` is set to `False`).
 
 This is basically (with some small changes) the [test.yml](tests/test.yml)
@@ -389,7 +389,7 @@ file which is used for testing.
 - hosts: proxysql
   gather_facts: True
   vars:
-    proxysql_version: 1.4.14
+    proxysql_version: 1.4.15
     proxysql_service_enabled: True
     proxysql_use_official_repo: True
     proxysql_login_admin_host: 127.0.0.1
@@ -624,7 +624,7 @@ You can install ProxySQL directly from a
 ```yaml
 - hosts: proxysql
   vars:
-    proxysql_version: 1.4.14
+    proxysql_version: 1.4.15
     proxysql_use_official_repo: False
     proxysql_use_percona_repo: False
     proxysql_login_admin_host: 127.0.0.1
@@ -861,14 +861,14 @@ An high level overview can be found in the following table:
 
 | Distribution | Version | Official repository | Percona repository | Package |
 |--------------|---------|---------------------|--------------------|---------|
-| CentOS       | 7       | yes                 | no                 | 1.4.14  |
-| Debian       | 8       | yes                 | yes                | 1.4.14  |
-| Debian       | 9       | yes                 | yes                | 1.4.14  |
-| Ubuntu       | 14.04   | yes                 | yes                | 1.4.14  |
-| Ubuntu       | 16.04   | yes                 | yes                | 1.4.14  |
-| Ubuntu       | 17.10   | no                  | yes                | 1.4.14  |
-| Ubuntu       | 18.04   | no                  | yes                | 1.4.14  |
-| Ubuntu       | 18.10   | no                  | yes                | 1.4.14  |
+| CentOS       | 7       | yes                 | no                 | 1.4.15  |
+| Debian       | 8       | yes                 | yes                | 1.4.15  |
+| Debian       | 9       | yes                 | yes                | 1.4.15  |
+| Ubuntu       | 14.04   | yes                 | yes                | 1.4.15  |
+| Ubuntu       | 16.04   | yes                 | yes                | 1.4.15  |
+| Ubuntu       | 17.10   | no                  | yes                | 1.4.15  |
+| Ubuntu       | 18.04   | no                  | yes                | 1.4.15  |
+| Ubuntu       | 18.10   | no                  | yes                | 1.4.15  |
 
 
 ```sh

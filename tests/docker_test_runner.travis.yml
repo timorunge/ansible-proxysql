@@ -32,10 +32,10 @@ docker_container_environments:
     proxysql_use_percona_repo: True
     skip_images:
       - CentOS_7
-  "1_4_14":
+  "1_4_15":
     proxysql_use_official_repo: False
     proxysql_use_percona_repo: False
-    proxysql_version: 1.4.14
+    proxysql_version: 1.4.15
 
 docker_container_volumes:
   "__PATH__":

@@ -26,17 +26,20 @@ docker_container_environments:
     proxysql_use_official_repo: True
     proxysql_use_percona_repo: False
     skip_images:
+      - Debian_10
       - Ubuntu_18_04
   pkg_percona_repo:
     proxysql_use_official_repo: False
     proxysql_use_percona_repo: True
     skip_images:
       - CentOS_7
+      - Debian_10
   "1_4_15":
     proxysql_use_official_repo: False
     proxysql_use_percona_repo: False
     proxysql_version: 1.4.15
-
+    skip_images:
+      - Debian_10
 docker_container_volumes:
   "__PATH__":
     bind: /etc/ansible/roles/timorunge.proxysql

@@ -16,31 +16,30 @@ docker_image_path: "__PATH__/tests/docker"
 
 docker_images:
   - CentOS_7
-  - Debian_8
   - Debian_9
-  - Ubuntu_14_04
+  - Debian_10
   - Ubuntu_16_04
-  - Ubuntu_17_10
   - Ubuntu_18_04
-  - Ubuntu_18_10
 
 docker_container_environments:
   pkg_official_repo:
     proxysql_use_official_repo: True
     proxysql_use_percona_repo: False
     skip_images:
-      - Ubuntu_17_10
+      - Debian_10
       - Ubuntu_18_04
-      - Ubuntu_18_10
   pkg_percona_repo:
     proxysql_use_official_repo: False
     proxysql_use_percona_repo: True
     skip_images:
       - CentOS_7
+      - Debian_10
   "1_4_15":
     proxysql_use_official_repo: False
     proxysql_use_percona_repo: False
     proxysql_version: 1.4.15
+    skip_images:
+      - Debian_10
 
 docker_container_volumes:
   "__PATH__":

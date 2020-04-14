@@ -2,7 +2,7 @@
 
 ---
 
-Currently this role is not compatible with ProxySQL v2.0.1.
+Currently this role is not compatible with ProxySQL >= v2.0.1.
 
 This role is just compatible with Ansible 2.7.9 or higher due to a bug in the
 migration from MySQLdb to PyMySQL
@@ -843,13 +843,9 @@ Tests are done with [Docker](https://www.docker.com) and
 brings up the following containers with different environment settings:
 
 - CentOS 7
-- Debian 8 (Jessie)
 - Debian 9 (Stretch)
-- Ubuntu 14.04 (Trusty Tahr)
 - Ubuntu 16.04 (Xenial Xerus)
-- Ubuntu 17.10 (Artful Aardvark)
 - Ubuntu 18.04 (Bionic Beaver)
-- Ubuntu 18.10 (Cosmic Cuttlefish)
 
 Ansible 2.7.9 is installed on all containers and a
 [test playbook](tests/test.yml) is getting applied.
@@ -862,13 +858,9 @@ An high level overview can be found in the following table:
 | Distribution | Version | Official repository | Percona repository | Package |
 |--------------|---------|---------------------|--------------------|---------|
 | CentOS       | 7       | yes                 | no                 | 1.4.15  |
-| Debian       | 8       | yes                 | yes                | 1.4.15  |
 | Debian       | 9       | yes                 | yes                | 1.4.15  |
-| Ubuntu       | 14.04   | yes                 | yes                | 1.4.15  |
 | Ubuntu       | 16.04   | yes                 | yes                | 1.4.15  |
-| Ubuntu       | 17.10   | no                  | yes                | 1.4.15  |
 | Ubuntu       | 18.04   | no                  | yes                | 1.4.15  |
-| Ubuntu       | 18.10   | no                  | yes                | 1.4.15  |
 
 
 ```sh
@@ -893,7 +885,7 @@ automated tests are limited to:
 
 ## License
 
-[BSD 3-Clause "New" or "Revised" License](https://spdx.org/licenses/BSD-3-Clause.html)
+[BSD 3-Clause "New" or "Revised" License](LICENSE)
 
 ## Author Information
 

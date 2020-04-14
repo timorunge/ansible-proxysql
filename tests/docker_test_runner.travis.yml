@@ -16,8 +16,8 @@ docker_image_path: "__PATH__/tests/docker"
 
 docker_images:
   - CentOS_7
-  - Debian_8
   - Debian_9
+  - Debian_10
   - Ubuntu_16_04
   - Ubuntu_18_04
 

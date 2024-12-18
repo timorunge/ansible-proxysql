@@ -4,7 +4,7 @@ galaxy_info:
   author: Valentin Dzhorov
   company: Delta.BG
   description: >
-               This role is a fork from timorunge.proxysql. 
+               This role is a fork from timorunge.proxysql.
                The role installs and configures ProxySQL -
                the high performance, high availability, protocol aware proxy for MySQL.
   role_name: proxysql
@@ -26,6 +26,7 @@ galaxy_info:
       - artful
       - bionic
       - cosmic
+      - noble
   galaxy_tags:
     - mysql
     - proxysql

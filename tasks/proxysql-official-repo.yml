@@ -66,6 +66,15 @@
         (ansible_os_family == "Debian") and
         "2.4" in proxysql_version
 
+- name: Add ProxySQL APT repository (2.7.x series)
+  apt_repository:
+    repo: deb http://repo.proxysql.com/ProxySQL/proxysql-2.7.x/{{ ansible_distribution_release }}/ ./
+    state: present
+  when: >
+        (proxysql_use_official_repo) and
+        (ansible_os_family == "Debian") and
+        "2.7" in proxysql_version
+
 - name: Add ProxySQL YUM repository (1.4 series)
   yum_repository:
     baseurl: http://repo.proxysql.com/ProxySQL/proxysql-1.4.x/centos/$releasever

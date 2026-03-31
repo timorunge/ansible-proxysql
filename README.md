@@ -6,7 +6,8 @@
 
 ---
 
-Currently this role is not compatible with ProxySQL >= v2.0.1.
+Currently this role is compatible with ProxySQL >= v2.0.1 if you are using RHEL 8.
+If you wish to install ProxySQL 1.4.x series, you will need to use RHEL 7 or lower.
 
 This role is just compatible with Ansible 2.7.9 or higher due to a bug in the
 migration from MySQLdb to PyMySQL
@@ -56,7 +57,7 @@ All platform requirements are listed in the metadata file.
 ## Install
 
 ```sh
-ansible-galaxy install timorunge.proxysql
+ansible-galaxy install vdzhorov.proxysql
 ```
 
 ## Role Variables
@@ -415,11 +416,6 @@ used for testing.
       mysql-default_query_delay: 0
       mysql-default_query_timeout: 300000
       mysql-default_schema: information_schema
-      mysql-default_sql_mode: >
-                              STRICT_TRANS_TABLES,
-                              ERROR_FOR_DIVISION_BY_ZERO,
-                              NO_AUTO_CREATE_USER,
-                              NO_ENGINE_SUBSTITUTION
       mysql-interfaces: 127.0.0.1:6033
       mysql-max_connections: 8192
       mysql-monitor_read_only_interval: 1500

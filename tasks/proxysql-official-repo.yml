@@ -12,15 +12,70 @@
         (proxysql_use_official_repo) and
         (ansible_os_family == "Debian")
 
-- name: Add ProxySQL APT repository
+- name: Add ProxySQL APT repository (1.4.x series)
   apt_repository:
     repo: deb http://repo.proxysql.com/ProxySQL/proxysql-1.4.x/{{ ansible_distribution_release }}/ ./
     state: present
   when: >
         (proxysql_use_official_repo) and
-        (ansible_os_family == "Debian")
+        (ansible_os_family == "Debian") and
+        "1.4" in proxysql_version
 
-- name: Add ProxySQL YUM repository
+- name: Add ProxySQL APT repository (2.0.x series)
+  apt_repository:
+    repo: deb http://repo.proxysql.com/ProxySQL/proxysql-2.x/{{ ansible_distribution_release }}/ ./
+    state: present
+  when: >
+        (proxysql_use_official_repo) and
+        (ansible_os_family == "Debian") and
+        "2.0" in proxysql_version
+
+- name: Add ProxySQL APT repository (2.1.x series)
+  apt_repository:
+    repo: deb http://repo.proxysql.com/ProxySQL/proxysql-2.1.x/{{ ansible_distribution_release }}/ ./
+    state: present
+  when: >
+        (proxysql_use_official_repo) and
+        (ansible_os_family == "Debian") and
+        "2.1" in proxysql_version
+
+- name: Add ProxySQL APT repository (2.2.x series)
+  apt_repository:
+    repo: deb http://repo.proxysql.com/ProxySQL/proxysql-2.3.x/{{ ansible_distribution_release }}/ ./
+    state: present
+  when: >
+        (proxysql_use_official_repo) and
+        (ansible_os_family == "Debian") and
+        "2.2" in proxysql_version
+
+- name: Add ProxySQL APT repository (2.3.x series)
+  apt_repository:
+    repo: deb http://repo.proxysql.com/ProxySQL/proxysql-2.3.x/{{ ansible_distribution_release }}/ ./
+    state: present
+  when: >
+        (proxysql_use_official_repo) and
+        (ansible_os_family == "Debian") and
+        "2.3" in proxysql_version
+
+- name: Add ProxySQL APT repository (2.4.x series)
+  apt_repository:
+    repo: deb http://repo.proxysql.com/ProxySQL/proxysql-2.4.x/{{ ansible_distribution_release }}/ ./
+    state: present
+  when: >
+        (proxysql_use_official_repo) and
+        (ansible_os_family == "Debian") and
+        "2.4" in proxysql_version
+
+- name: Add ProxySQL APT repository (2.7.x series)
+  apt_repository:
+    repo: deb http://repo.proxysql.com/ProxySQL/proxysql-2.7.x/{{ ansible_distribution_release }}/ ./
+    state: present
+  when: >
+        (proxysql_use_official_repo) and
+        (ansible_os_family == "Debian") and
+        "2.7" in proxysql_version
+
+- name: Add ProxySQL YUM repository (1.4 series)
   yum_repository:
     baseurl: http://repo.proxysql.com/ProxySQL/proxysql-1.4.x/centos/$releasever
     description: ProxySQL YUM repository
@@ -30,4 +85,70 @@
     state: present
   when: >
         (proxysql_use_official_repo) and
-        (ansible_os_family == "RedHat")
+        (ansible_os_family == "RedHat") and
+        "1.4" in proxysql_version
+
+- name: Add ProxySQL YUM repository (2.0.x series)
+  yum_repository:
+    baseurl: https://repo.proxysql.com/ProxySQL/proxysql-2.0.x/centos/$releasever
+    description: ProxySQL YUM repository
+    gpgcheck: True
+    gpgkey: http://repo.proxysql.com/ProxySQL/repo_pub_key
+    name: proxysql-2.x
+    state: present
+  when: >
+        (proxysql_use_official_repo) and
+        (ansible_os_family == "RedHat") and
+        "2.0" in proxysql_version
+
+- name: Add ProxySQL YUM repository (2.1.x series)
+  yum_repository:
+    baseurl: https://repo.proxysql.com/ProxySQL/proxysql-2.1.x/centos/$releasever
+    description: ProxySQL YUM repository
+    gpgcheck: True
+    gpgkey: https://repo.proxysql.com/ProxySQL/proxysql-2.1.x/repo_pub_key
+    name: proxysql-2.1.x
+    state: present
+  when: >
+        (proxysql_use_official_repo) and
+        (ansible_os_family == "RedHat") and
+        "2.1" in proxysql_version
+
+- name: Add ProxySQL YUM repository (2.2.x series)
+  yum_repository:
+    baseurl: https://repo.proxysql.com/ProxySQL/proxysql-2.2.x/centos/$releasever
+    description: ProxySQL YUM repository
+    gpgcheck: True
+    gpgkey: https://repo.proxysql.com/ProxySQL/proxysql-2.2.x/repo_pub_key
+    name: proxysql-2.2.x
+    state: present
+  when: >
+        (proxysql_use_official_repo) and
+        (ansible_os_family == "RedHat") and
+        "2.2" in proxysql_version
+
+- name: Add ProxySQL YUM repository (2.3.x series)
+  yum_repository:
+    baseurl: https://repo.proxysql.com/ProxySQL/proxysql-2.3.x/centos/$releasever
+    description: ProxySQL YUM repository
+    gpgcheck: True
+    gpgkey: https://repo.proxysql.com/ProxySQL/proxysql-2.3.x/repo_pub_key
+    name: proxysql-2.3.x
+    state: present
+  when: >
+        (proxysql_use_official_repo) and
+        (ansible_os_family == "RedHat") and
+        "2.3" in proxysql_version
+
+- name: Add ProxySQL YUM repository (2.4.x series)
+  yum_repository:
+    baseurl: https://repo.proxysql.com/ProxySQL/proxysql-2.4.x/centos/$releasever
+    description: ProxySQL YUM repository
+    gpgcheck: True
+    gpgkey: https://repo.proxysql.com/ProxySQL/proxysql-2.4.x/repo_pub_key
+    name: proxysql-2.4.x
+    state: present
+  when: >
+        (proxysql_use_official_repo) and
+        (ansible_os_family == "RedHat") and
+        "2.4" in proxysql_version

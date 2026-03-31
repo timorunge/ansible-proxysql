@@ -1,3 +1,7 @@
+> **Status: Archived.**
+>
+> This repository is no longer maintained and is kept for reference only.
+
 # proxysql
 
 ---
@@ -21,7 +25,7 @@ Since version 2.3.0 Ansible is providing an
 itself. This Ansible role is using this functionality but adding some
 (hopefully useful) features on top:
 
-- Automatic installation for [different operating systems](#testing)
+- Automatic installation for different operating systems
 - (Pre-) generation of [proxysql.cnf](templates/proxysql.cnf.j2)
 - Manage a
   [ProxySQL-Cluster](https://github.com/sysown/proxysql/wiki/ProxySQL-Cluster)
@@ -382,8 +386,8 @@ Here you can see a full example of a configuration of ProxySQL. In this case
 the role will download the `1.4.15` package directly and not use the repository
 (`proxysql_use_official_repo` is set to `False`).
 
-This is basically (with some small changes) the [test.yml](tests/test.yml)
-file which is used for testing.
+This is basically (with some small changes) the test playbook which was
+used for testing.
 
 ```yaml
 - hosts: proxysql
@@ -580,8 +584,7 @@ ProxySQL itself is not providing packages in the repository for Ubuntu > 16.04.
 Just set the `proxysql_use_official_repo` to `False` for newer Ubuntu releases
 or use the Percona repository.
 
-Take a look at the [testing section](#testing) for the coverage of the official
-repository.
+The official repository does not provide packages for Ubuntu > 16.04.
 
 ```yaml
 - hosts: proxysql
@@ -599,8 +602,7 @@ repository.
 
 Use the ProxySQL repository (`proxysql_use_percona_repo` is set to `True`).
 
-Take a look at the [testing section](#testing) for the coverage of the Percona
-repository.
+The Percona repository provides broader platform coverage.
 
 ```yaml
 - hosts: proxysql
@@ -834,50 +836,6 @@ Install  1 Package (+2 Dependent packages)
 As you can see, `MySQL-python` is depending on `Percona-Server-shared-56` while
 `mysql` is depending on `Percona-Server-shared-57`.
 
-## Testing
-
-[![Build Status](https://travis-ci.org/timorunge/ansible-proxysql.svg?branch=master)](https://travis-ci.org/timorunge/ansible-proxysql)
-
-Tests are done with [Docker](https://www.docker.com) and
-[docker_test_runner](https://github.com/timorunge/docker-test-runner) which
-brings up the following containers with different environment settings:
-
-- CentOS 7
-- Debian 9 (Stretch)
-- Ubuntu 16.04 (Xenial Xerus)
-- Ubuntu 18.04 (Bionic Beaver)
-
-Ansible 2.7.9 is installed on all containers and a
-[test playbook](tests/test.yml) is getting applied.
-
-For further details and additional checks take a look at the
-[docker_test_runner configuration](tests/docker_test_runner.yml) and the
-[Docker entrypoint](tests/docker/docker-entrypoint.sh).
-An high level overview can be found in the following table:
-
-| Distribution | Version | Official repository | Percona repository | Package |
-|--------------|---------|---------------------|--------------------|---------|
-| CentOS       | 7       | yes                 | no                 | 1.4.15  |
-| Debian       | 9       | yes                 | yes                | 1.4.15  |
-| Ubuntu       | 16.04   | yes                 | yes                | 1.4.15  |
-| Ubuntu       | 18.04   | no                  | yes                | 1.4.15  |
-
-
-```sh
-# Testing locally:
-curl https://raw.githubusercontent.com/timorunge/docker-test-runner/master/install.sh | sh
-./docker_test_runner.py -f tests/docker_test_runner.yml
-```
-
-Since the build time on Travis is limited for public repositories the
-automated tests are limited to:
-
-- CentOS 7
-- Debian 8 (Jessie)
-- Debian 9 (Stretch)
-- Ubuntu 16.04 (Xenial Xerus)
-- Ubuntu 18.04 (Bionic Beaver)
-
 ## Dependencies
 
 - [proxysql_proxysql_servers.py](https://github.com/timorunge/ansible-proxysql_proxysql_servers)
@@ -886,7 +844,3 @@ automated tests are limited to:
 ## License
 
 [BSD 3-Clause "New" or "Revised" License](LICENSE)
-
-## Author Information
-
-- Timo Runge
